@@ -1,0 +1,243 @@
+import { useEffect, useRef } from 'react';
+import { motion } from 'framer-motion';
+import { Activity } from 'lucide-react';
+import './index.css';
+
+const DNABackground = () => {
+  const canvasRef = useRef<HTMLCanvasElement>(null);
+
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return;
+
+    let animationFrameId: number;
+
+    const resize = () => {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+    };
+    resize();
+    window.addEventListener('resize', resize);
+
+    const letters = ['A', 'C', 'T', 'G'];
+    let time = 0;
+
+    const render = () => {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      ctx.save();
+      
+      // Move to right side where DNA is in the screenshot, and tilt
+      ctx.translate(canvas.width * 0.75, canvas.height * 0.5);
+      ctx.rotate(25 * Math.PI / 180);
+
+      time += 0.015;
+
+      const items = [];
+      const totalPoints = 60;
+      const spacing = 45; // vertical gap
+      const amplitude = 220; // width of helix
+      const frequency = 0.08; // tightness of twist
+
+      for (let i = -totalPoints / 2; i < totalPoints / 2; i++) {
+        const y = i * spacing;
+        const phase = i * frequency + time;
+
+        const x1 = Math.cos(phase) * amplitude;
+        const z1 = Math.sin(phase) * amplitude;
+        const x2 = Math.cos(phase + Math.PI) * amplitude;
+        const z2 = Math.sin(phase + Math.PI) * amplitude;
+
+        items.push({
+          y, x1, z1, x2, z2,
+          l1: letters[(i + totalPoints * 2) % 4],
+          l2: letters[(i + 2 + totalPoints * 2) % 4],
+          avgZ: (z1 + z2) / 2
+        });
+      }
+
+      // Sort by Z to draw back to front
+      items.sort((a, b) => a.avgZ - b.avgZ);
+
+      items.forEach(item => {
+        // Draw the line
+        const opacityLine = Math.max(0.02, 0.08 + (item.avgZ / amplitude) * 0.12);
+        ctx.beginPath();
+        ctx.moveTo(item.x1, item.y);
+        ctx.lineTo(item.x2, item.y);
+        ctx.strokeStyle = `rgba(16, 185, 129, ${opacityLine})`;
+        ctx.lineWidth = 1;
+        ctx.stroke();
+
+        // Draw points
+        const drawPoint = (x: number, z: number, l: string) => {
+          const zNorm = (z + amplitude) / (amplitude * 2); // 0 to 1
+          const alpha = 0.15 + zNorm * 0.85;
+          const fontSize = 10 + zNorm * 14;
+          ctx.font = `bold ${fontSize}px 'JetBrains Mono', monospace`;
+          // Subtle glow effect for front letters
+          if (zNorm > 0.8) {
+             ctx.shadowColor = 'rgba(16, 185, 129, 0.5)';
+             ctx.shadowBlur = 10;
+          } else {
+             ctx.shadowBlur = 0;
+          }
+          ctx.fillStyle = `rgba(16, 185, 129, ${alpha})`;
+          ctx.textAlign = 'center';
+          ctx.textBaseline = 'middle';
+          ctx.fillText(l, x, item.y);
+        };
+
+        drawPoint(item.x1, item.z1, item.l1);
+        drawPoint(item.x2, item.z2, item.l2);
+      });
+
+      ctx.restore();
+      animationFrameId = requestAnimationFrame(render);
+    };
+
+    render();
+
+    return () => {
+      window.removeEventListener('resize', resize);
+      cancelAnimationFrame(animationFrameId);
+    };
+  }, []);
+
+  return (
+    <canvas
+      ref={canvasRef}
+      style={{
+        position: 'absolute',
+        top: 0,
+        left: 0,
+        width: '100%',
+        height: '100%',
+        pointerEvents: 'none',
+        zIndex: 0
+      }}
+    />
+  );
+};
+
+export const LandingPage = ({ onEnter }: { onEnter: () => void }) => {
+  return (
+    <div style={{ position: 'relative', width: '100%', minHeight: '100vh', overflow: 'hidden', backgroundColor: 'var(--bg-primary)' }}>
+      <DNABackground />
+      
+      {/* Navbar */}
+      <motion.nav 
+        initial={{ opacity: 0, y: -20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.8 }}
+        style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '2rem 4rem', zIndex: 10, position: 'relative' }}
+      >
+        {/* Left */}
+        <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', fontWeight: 800, fontSize: '1.2rem', letterSpacing: '0.05em', color: 'white', fontFamily: 'var(--font-heading)' }}>
+          <div style={{ background: 'white', color: 'black', padding: '0.3rem', borderRadius: '4px', display: 'flex' }}>
+            <Activity size={20} strokeWidth={3} />
+          </div>
+          ECO_TRACKER
+        </div>
+        
+        {/* Middle */}
+        <div style={{ display: 'flex', gap: '3rem', fontSize: '0.8rem', fontWeight: 700, letterSpacing: '0.15em', color: 'var(--text-muted)' }}>
+          <span style={{ cursor: 'pointer', color: 'white', transition: 'color 0.2s' }}>FEATURES</span>
+          <span style={{ cursor: 'pointer', transition: 'color 0.2s' }} className="hover:text-white">INTERFACE</span>
+          <span style={{ cursor: 'pointer', transition: 'color 0.2s' }} className="hover:text-white">CONTACT</span>
+        </div>
+        
+        {/* Right */}
+        <div style={{ display: 'flex', alignItems: 'center', gap: '2rem' }}>
+          <div className="glass-panel" style={{ padding: '8px 20px', borderRadius: '30px', display: 'flex', alignItems: 'center', gap: '10px', border: '1px solid rgba(255,255,255,0.05)', background: 'rgba(255,255,255,0.02)' }}>
+            <div style={{ width: 8, height: 8, borderRadius: '50%', backgroundColor: 'var(--accent-neon)', boxShadow: 'var(--accent-glow)' }} />
+            <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)', letterSpacing: '0.1em', fontWeight: 600 }}>SYSTEM ACTIVE</span>
+          </div>
+          <button style={{ background: 'white', color: 'black', padding: '12px 28px', borderRadius: '30px', fontWeight: 700, fontSize: '0.8rem', cursor: 'pointer', border: 'none', letterSpacing: '0.05em', transition: 'transform 0.2s', fontFamily: 'var(--font-body)' }}
+            onMouseOver={(e) => e.currentTarget.style.transform = 'scale(1.05)'}
+            onMouseOut={(e) => e.currentTarget.style.transform = 'scale(1)'}
+          >
+            GET STARTED
+          </button>
+        </div>
+      </motion.nav>
+      
+      {/* Hero Content */}
+      <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', minHeight: '70vh', zIndex: 10, position: 'relative' }}>
+        {/* Badge */}
+        <motion.div 
+          initial={{ opacity: 0, scale: 0.9 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ duration: 0.5, delay: 0.2 }}
+          style={{ border: '1px solid rgba(16, 185, 129, 0.4)', background: 'rgba(16, 185, 129, 0.05)', color: 'var(--accent-neon)', fontSize: '0.7rem', fontWeight: 700, letterSpacing: '0.15em', padding: '8px 20px', borderRadius: '30px', marginBottom: '2.5rem' }}
+        >
+          V.0.4.9 — STABLE RELEASE
+        </motion.div>
+        
+        {/* Title */}
+        <motion.h1 
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.7, delay: 0.3 }}
+          style={{ fontSize: 'clamp(4rem, 8vw, 7.5rem)', lineHeight: '0.9', textAlign: 'center', fontWeight: 500, margin: 0, fontFamily: 'var(--font-body)', letterSpacing: '-0.02em' }}
+        >
+          <span style={{ color: 'white' }}>CYBER-ORGANIC</span>
+          <br />
+          <span style={{ color: 'var(--accent-neon)', fontStyle: 'italic', fontWeight: 700, letterSpacing: '-0.04em' }}>INTELLIGENCE</span>
+        </motion.h1>
+        
+        {/* Description */}
+        <motion.p 
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 0.8, delay: 0.5 }}
+          style={{ color: 'var(--text-muted)', fontSize: '1.25rem', textAlign: 'center', maxWidth: '650px', marginTop: '2.5rem', lineHeight: '1.6', fontWeight: 400 }}
+        >
+          Rewriting the telemetry of hardware efficiency. Monitoring carbon velocity through advanced neural-mapped heuristics.
+        </motion.p>
+        
+        {/* Buttons */}
+        <motion.div 
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, delay: 0.7 }}
+          style={{ display: 'flex', gap: '1.5rem', marginTop: '3.5rem' }}
+        >
+          <button onClick={onEnter} style={{ background: 'var(--accent-neon)', color: '#050b09', padding: '16px 32px', borderRadius: '30px', fontWeight: 700, fontSize: '0.9rem', cursor: 'pointer', border: 'none', display: 'flex', alignItems: 'center', gap: '0.5rem', textTransform: 'uppercase', letterSpacing: '0.05em', transition: 'all 0.2s', boxShadow: '0 0 20px rgba(16, 185, 129, 0.3)', fontFamily: 'var(--font-body)' }}
+            onMouseOver={(e) => { e.currentTarget.style.transform = 'translateY(-2px)'; e.currentTarget.style.boxShadow = '0 5px 30px rgba(16, 185, 129, 0.5)'; }}
+            onMouseOut={(e) => { e.currentTarget.style.transform = 'translateY(0)'; e.currentTarget.style.boxShadow = '0 0 20px rgba(16, 185, 129, 0.3)'; }}
+          >
+            ENTER DASHBOARD <span style={{fontSize: '1.2rem', marginLeft: '4px'}}>→</span>
+          </button>
+          <button style={{ background: 'rgba(0,0,0,0.3)', backdropFilter: 'blur(10px)', color: 'var(--text-muted)', padding: '16px 36px', borderRadius: '30px', fontWeight: 700, fontSize: '0.85rem', cursor: 'pointer', border: '1px solid rgba(255,255,255,0.05)', textTransform: 'uppercase', letterSpacing: '0.05em', transition: 'all 0.2s', fontFamily: 'var(--font-body)' }}
+            onMouseOver={(e) => { e.currentTarget.style.color = 'white'; e.currentTarget.style.borderColor = 'rgba(255,255,255,0.2)' }}
+            onMouseOut={(e) => { e.currentTarget.style.color = 'var(--text-muted)'; e.currentTarget.style.borderColor = 'rgba(255,255,255,0.05)' }}
+          >
+            WATCH PROTOCOL V0.1
+          </button>
+        </motion.div>
+      </div>
+      
+      {/* Telemetry Stream */}
+      <motion.div 
+        initial={{ opacity: 0, x: -20 }}
+        animate={{ opacity: 1, x: 0 }}
+        transition={{ duration: 0.8, delay: 1 }}
+        style={{ position: 'absolute', bottom: '3rem', left: '4rem', fontFamily: 'var(--font-mono)', zIndex: 10 }}
+      >
+        <div style={{ color: 'rgba(255,255,255,0.3)', fontSize: '0.7rem', textTransform: 'uppercase', letterSpacing: '0.15em', marginBottom: '1.2rem', fontWeight: 700 }}>
+          TELEMETRY STREAM
+        </div>
+        <div style={{ color: 'var(--accent-neon)', fontSize: '0.85rem', lineHeight: '1.8', letterSpacing: '0.05em' }}>
+          0x4A82 // CPU LOAD: 42.4%<br/>
+          0x91F0 // POWER: 142.0W<br/>
+          0x2CC1 // TEMP: 38.5C
+        </div>
+      </motion.div>
+      
+    </div>
+  );
+};
+
+export default LandingPage;
