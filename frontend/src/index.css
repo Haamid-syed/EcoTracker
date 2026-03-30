@@ -5,12 +5,12 @@
   --bg-primary: #050b09; /* Very deep dark green/slate */
   --bg-secondary: #0a1310;
   --bg-glass: rgba(16, 32, 27, 0.4);
-  --border-glass: rgba(16, 185, 129, 0.15);
-  --border-glass-hover: rgba(16, 185, 129, 0.3);
+  --border-glass: rgba(52, 211, 153, 0.15);
+  --border-glass-hover: rgba(52, 211, 153, 0.3);
   
-  --accent-neon: #10B981;
-  --accent-neon-dim: rgba(16, 185, 129, 0.2);
-  --accent-glow: 0 0 20px rgba(16, 185, 129, 0.3);
+  --accent-neon: #34d399;
+  --accent-neon-dim: rgba(52, 211, 153, 0.2);
+  --accent-glow: 0 0 20px rgba(52, 211, 153, 0.3);
   
   --warn-color: #f59e0b;
   --warn-glass: rgba(245, 158, 11, 0.1);
@@ -61,7 +61,7 @@ body::after {
   right: -10vw;
   width: 60vw;
   height: 60vw;
-  background: radial-gradient(circle, rgba(16,185,129,0.15) 0%, rgba(5,11,9,0) 70%);
+  background: radial-gradient(circle, rgba(52,211,153,0.15) 0%, rgba(5,11,9,0) 70%);
   border-radius: 50%;
   z-index: -1;
   filter: blur(80px);
@@ -102,21 +102,21 @@ h1, h2, h3, h4, h5, h6 {
   background: var(--bg-primary);
 }
 ::-webkit-scrollbar-thumb {
-  background: rgba(16, 185, 129, 0.2);
+  background: rgba(52, 211, 153, 0.2);
   border-radius: 4px;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: rgba(16, 185, 129, 0.4);
+  background: rgba(52, 211, 153, 0.4);
 }
 
 /* Utilities */
 .text-neon {
   color: var(--accent-neon);
-  text-shadow: 0 0 16px rgba(16, 185, 129, 0.5);
+  text-shadow: 0 0 16px rgba(52, 211, 153, 0.5);
 }
 
 .text-gradient {
-  background: linear-gradient(135deg, #ffffff 0%, #10B981 100%);
+  background: linear-gradient(135deg, #ffffff 0%, #34d399 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
@@ -160,9 +160,9 @@ h1, h2, h3, h4, h5, h6 {
 
 /* Animations */
 @keyframes pulseGlow {
-  0% { text-shadow: 0 0 10px rgba(16, 185, 129, 0.3); }
-  50% { text-shadow: 0 0 20px rgba(16, 185, 129, 0.8), 0 0 30px rgba(16, 185, 129, 0.4); }
-  100% { text-shadow: 0 0 10px rgba(16, 185, 129, 0.3); }
+  0% { text-shadow: 0 0 10px rgba(52, 211, 153, 0.3); }
+  50% { text-shadow: 0 0 20px rgba(52, 211, 153, 0.8), 0 0 30px rgba(52, 211, 153, 0.4); }
+  100% { text-shadow: 0 0 10px rgba(52, 211, 153, 0.3); }
 }
 
 .glow-animation {
