@@ -120,78 +120,45 @@ const DNABackground = () => {
   );
 };
 
-export const LandingPage = ({ onEnter }: { onEnter: () => void }) => {
+import { useNavigate } from 'react-router-dom';
+
+export const LandingPage = () => {
+  const navigate = useNavigate();
+
   return (
-    <div style={{ position: 'relative', width: '100%', minHeight: '100vh', backgroundColor: 'var(--bg-primary)' }}>
+    <div style={{ position: 'relative', width: '100%', minHeight: '100vh', backgroundColor: 'var(--bg-primary)', overflow: 'hidden' }}>
       <DNABackground />
       
-      {/* Navbar */}
-      <motion.nav 
-        initial={{ opacity: 0, y: -20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.8 }}
-        style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '2rem 4rem', zIndex: 10, position: 'relative' }}
-      >
-        {/* Left */}
-        <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', fontWeight: 800, fontSize: '1.2rem', letterSpacing: '0.05em', color: 'white', fontFamily: 'var(--font-heading)' }}>
-          <div style={{ background: 'white', color: 'black', padding: '0.3rem', borderRadius: '4px', display: 'flex' }}>
-            <Activity size={20} strokeWidth={3} />
-          </div>
-          ECO_TRACKER
-        </div>
-        
-        {/* Middle */}
-        <div style={{ display: 'flex', gap: '3rem', fontSize: '0.8rem', fontWeight: 700, letterSpacing: '0.15em', color: 'var(--text-muted)' }}>
-          <span style={{ cursor: 'pointer', color: 'white', transition: 'color 0.2s' }}>FEATURES</span>
-          <span style={{ cursor: 'pointer', transition: 'color 0.2s' }} className="hover:text-white">INTERFACE</span>
-          <span style={{ cursor: 'pointer', transition: 'color 0.2s' }} className="hover:text-white">CONTACT</span>
-        </div>
-        
-        {/* Right */}
-        <div style={{ display: 'flex', alignItems: 'center', gap: '2rem' }}>
-          <div className="glass-panel" style={{ padding: '8px 20px', borderRadius: '30px', display: 'flex', alignItems: 'center', gap: '10px', border: '1px solid rgba(255,255,255,0.05)', background: 'rgba(255,255,255,0.02)' }}>
-            <div style={{ width: 8, height: 8, borderRadius: '50%', backgroundColor: 'var(--accent-neon)', boxShadow: 'var(--accent-glow)' }} />
-            <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)', letterSpacing: '0.1em', fontWeight: 600 }}>SYSTEM ACTIVE</span>
-          </div>
-          <button style={{ background: 'white', color: 'black', padding: '12px 28px', borderRadius: '30px', fontWeight: 700, fontSize: '0.8rem', cursor: 'pointer', border: 'none', letterSpacing: '0.05em', transition: 'transform 0.2s', fontFamily: 'var(--font-body)' }}
-            onMouseOver={(e) => e.currentTarget.style.transform = 'scale(1.05)'}
-            onMouseOut={(e) => e.currentTarget.style.transform = 'scale(1)'}
-          >
-            GET STARTED
-          </button>
-        </div>
-      </motion.nav>
-      
       {/* Hero Content */}
-      <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', minHeight: '70vh', zIndex: 10, position: 'relative' }}>
+      <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', minHeight: '85vh', zIndex: 10, position: 'relative', padding: '0 2rem' }}>
         {/* Badge */}
         <motion.div 
           initial={{ opacity: 0, scale: 0.9 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ duration: 0.5, delay: 0.2 }}
-          style={{ border: '1px solid rgba(16, 185, 129, 0.4)', background: 'rgba(16, 185, 129, 0.05)', color: 'var(--accent-neon)', fontSize: '0.7rem', fontWeight: 700, letterSpacing: '0.15em', padding: '8px 20px', borderRadius: '30px', marginBottom: '2.5rem' }}
+          style={{ border: '1px solid rgba(46, 204, 113, 0.3)', background: 'rgba(46, 204, 113, 0.05)', color: 'var(--accent-neon)', fontSize: '0.75rem', fontWeight: 800, letterSpacing: '0.15em', padding: '10px 24px', borderRadius: '30px', marginBottom: '2rem' }}
         >
           V.0.4.9 — STABLE RELEASE
         </motion.div>
         
         {/* Title */}
         <motion.h1 
-          initial={{ opacity: 0, y: 20 }}
+          initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.7, delay: 0.3 }}
-          style={{ fontSize: 'clamp(4rem, 8vw, 7.5rem)', lineHeight: '0.9', textAlign: 'center', fontWeight: 500, margin: 0, fontFamily: 'var(--font-body)', letterSpacing: '-0.02em' }}
+          transition={{ duration: 0.8, delay: 0.3 }}
+          style={{ fontSize: 'clamp(3.5rem, 9vw, 8rem)', lineHeight: '0.9', textAlign: 'center', fontWeight: 900, margin: 0, letterSpacing: '-0.04em', textTransform: 'uppercase', maxWidth: '1200px' }}
         >
           <span style={{ color: 'white' }}>CYBER-ORGANIC</span>
           <br />
-          <span style={{ color: 'var(--accent-neon)', fontStyle: 'italic', fontWeight: 700, letterSpacing: '-0.04em' }}>INTELLIGENCE</span>
+          <span style={{ color: 'var(--accent-neon)', fontStyle: 'italic', fontWeight: 800, letterSpacing: '-0.02em', filter: 'drop-shadow(0 0 20px rgba(46, 204, 113, 0.2))' }}>INTELLIGENCE</span>
         </motion.h1>
         
         {/* Description */}
         <motion.p 
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          transition={{ duration: 0.8, delay: 0.5 }}
-          style={{ color: 'var(--text-muted)', fontSize: '1.25rem', textAlign: 'center', maxWidth: '650px', marginTop: '2.5rem', lineHeight: '1.6', fontWeight: 400 }}
+          transition={{ duration: 1, delay: 0.5 }}
+          style={{ color: 'var(--text-muted)', fontSize: '1.2rem', textAlign: 'center', maxWidth: '700px', marginTop: '2.5rem', lineHeight: '1.7', fontWeight: 500 }}
         >
           Rewriting the telemetry of hardware efficiency. Monitoring carbon velocity through advanced neural-mapped heuristics.
         </motion.p>
@@ -203,17 +170,35 @@ export const LandingPage = ({ onEnter }: { onEnter: () => void }) => {
           transition={{ duration: 0.6, delay: 0.7 }}
           style={{ display: 'flex', gap: '1.5rem', marginTop: '3.5rem' }}
         >
-          <button onClick={onEnter} style={{ background: 'var(--accent-neon)', color: '#050b09', padding: '16px 32px', borderRadius: '30px', fontWeight: 700, fontSize: '0.9rem', cursor: 'pointer', border: 'none', display: 'flex', alignItems: 'center', gap: '0.5rem', textTransform: 'uppercase', letterSpacing: '0.05em', transition: 'all 0.2s', boxShadow: '0 0 20px rgba(16, 185, 129, 0.3)', fontFamily: 'var(--font-body)' }}
-            onMouseOver={(e) => { e.currentTarget.style.transform = 'translateY(-2px)'; e.currentTarget.style.boxShadow = '0 5px 30px rgba(16, 185, 129, 0.5)'; }}
-            onMouseOut={(e) => { e.currentTarget.style.transform = 'translateY(0)'; e.currentTarget.style.boxShadow = '0 0 20px rgba(16, 185, 129, 0.3)'; }}
+          <button 
+            onClick={() => navigate('/dashboard')} 
+            style={{ 
+              background: 'var(--accent-neon)', 
+              color: '#050b09', 
+              padding: '20px 48px', 
+              borderRadius: '40px', 
+              fontWeight: 800, 
+              fontSize: '1rem', 
+              cursor: 'pointer', 
+              border: 'none', 
+              display: 'flex', 
+              alignItems: 'center', 
+              gap: '0.75rem', 
+              textTransform: 'uppercase', 
+              letterSpacing: '0.1em', 
+              transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)', 
+              boxShadow: '0 0 30px rgba(46, 204, 113, 0.4)' 
+            }}
+            onMouseOver={(e) => { e.currentTarget.style.transform = 'translateY(-3px) scale(1.02)'; e.currentTarget.style.boxShadow = '0 10px 40px rgba(46, 204, 113, 0.6)'; }}
+            onMouseOut={(e) => { e.currentTarget.style.transform = 'translateY(0) scale(1)'; e.currentTarget.style.boxShadow = '0 0 30px rgba(46, 204, 113, 0.4)'; }}
           >
-            ENTER DASHBOARD <span style={{fontSize: '1.2rem', marginLeft: '4px'}}>→</span>
+            ENTER DASHBOARD <span style={{fontSize: '1.4rem'}}>→</span>
           </button>
-          <button style={{ background: 'rgba(0,0,0,0.3)', backdropFilter: 'blur(10px)', color: 'var(--text-muted)', padding: '16px 36px', borderRadius: '30px', fontWeight: 700, fontSize: '0.85rem', cursor: 'pointer', border: '1px solid rgba(255,255,255,0.05)', textTransform: 'uppercase', letterSpacing: '0.05em', transition: 'all 0.2s', fontFamily: 'var(--font-body)' }}
-            onMouseOver={(e) => { e.currentTarget.style.color = 'white'; e.currentTarget.style.borderColor = 'rgba(255,255,255,0.2)' }}
-            onMouseOut={(e) => { e.currentTarget.style.color = 'var(--text-muted)'; e.currentTarget.style.borderColor = 'rgba(255,255,255,0.05)' }}
+          <button style={{ background: 'rgba(255,255,255,0.03)', backdropFilter: 'blur(10px)', color: 'white', padding: '20px 48px', borderRadius: '40px', fontWeight: 800, fontSize: '0.95rem', cursor: 'pointer', border: '1px solid rgba(255,255,255,0.1)', textTransform: 'uppercase', letterSpacing: '0.1em', transition: 'all 0.3s' }}
+            onMouseOver={(e) => { e.currentTarget.style.background = 'rgba(255,255,255,0.08)'; e.currentTarget.style.borderColor = 'rgba(255,255,255,0.2)' }}
+            onMouseOut={(e) => { e.currentTarget.style.background = 'rgba(255,255,255,0.03)'; e.currentTarget.style.borderColor = 'rgba(255,255,255,0.1)' }}
           >
-            WATCH PROTOCOL V0.1
+            DOCUMENTATION
           </button>
         </motion.div>
       </div>
@@ -223,15 +208,15 @@ export const LandingPage = ({ onEnter }: { onEnter: () => void }) => {
         initial={{ opacity: 0, x: -20 }}
         animate={{ opacity: 1, x: 0 }}
         transition={{ duration: 0.8, delay: 1 }}
-        style={{ position: 'absolute', bottom: '3rem', left: '4rem', fontFamily: 'var(--font-mono)', zIndex: 10 }}
+        style={{ position: 'absolute', bottom: '6rem', left: '4rem', fontFamily: 'var(--font-mono)', zIndex: 10 }}
       >
-        <div style={{ color: 'rgba(255,255,255,0.3)', fontSize: '0.7rem', textTransform: 'uppercase', letterSpacing: '0.15em', marginBottom: '1.2rem', fontWeight: 700 }}>
-          TELEMETRY STREAM
+        <div style={{ color: 'rgba(46, 204, 113, 0.4)', fontSize: '0.75rem', textTransform: 'uppercase', letterSpacing: '0.2em', marginBottom: '1rem', fontWeight: 800 }}>
+          TELEMETRY // STREAM_ACTIVE
         </div>
-        <div style={{ color: 'var(--accent-neon)', fontSize: '0.85rem', lineHeight: '1.8', letterSpacing: '0.05em' }}>
-          0x4A82 // CPU LOAD: 42.4%<br/>
-          0x91F0 // POWER: 142.0W<br/>
-          0x2CC1 // TEMP: 38.5C
+        <div style={{ color: 'var(--accent-neon)', fontSize: '0.9rem', lineHeight: '1.8', letterSpacing: '0.05em', opacity: 0.8 }}>
+          0x4A82 // CPU_LOAD: 42.4%<br/>
+          0x91F0 // POWER_DRAW: 142.0W<br/>
+          0x2CC1 // THERMAL: 38.5C
         </div>
       </motion.div>
       
@@ -242,7 +227,7 @@ export const LandingPage = ({ onEnter }: { onEnter: () => void }) => {
   );
 };
 
-const ArchitecturalFeatures = () => {
+function ArchitecturalFeatures() {
   return (
     <div style={{ maxWidth: '1400px', margin: '0 auto', padding: '6rem 4rem 8rem 4rem', position: 'relative', zIndex: 10 }}>
       {/* Header */}

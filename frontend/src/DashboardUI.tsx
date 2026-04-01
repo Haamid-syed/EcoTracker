@@ -100,23 +100,8 @@ export function DashboardUI() {
   };
 
   return (
-    <div style={{ minHeight: '100vh', padding: '1.5rem', backgroundColor: 'var(--bg-primary)', color: 'white', overflowX: 'hidden' }}>
+    <div style={{ minHeight: 'calc(100vh - 64px)', padding: '2.5rem 1.5rem', backgroundColor: 'var(--bg-primary)', color: 'white', overflowX: 'hidden' }}>
       
-      {/* HEADER SECTION */}
-      <motion.header 
-        initial={{ opacity: 0, y: -20 }} 
-        animate={{ opacity: 1, y: 0 }}
-        style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '2.5rem', maxWidth: '1400px', margin: '0 auto 2.5rem' }}
-      >
-        <div>
-          <h1 style={{ fontSize: '1.8rem', fontWeight: 800, color: 'var(--accent-neon)', marginBottom: '4px', letterSpacing: '-0.02em' }}>Eco-Tracker</h1>
-          <p style={{ fontSize: '0.85rem', color: 'var(--text-muted)', fontWeight: 500 }}>Real-time Environmental Telemetry</p>
-        </div>
-        <div style={{ textAlign: 'right', fontFamily: 'var(--font-mono)', fontSize: '0.65rem', color: 'var(--text-telemetry)', letterSpacing: '0.15em', background: 'rgba(46, 204, 113, 0.05)', padding: '6px 12px', borderRadius: '4px', border: '1px solid rgba(46, 204, 113, 0.1)' }}>
-          SIGNAL STRENGTH: 98% // REFRESH 0.5s
-        </div>
-      </motion.header>
-
       {/* DASHBOARD GRID */}
       <motion.div 
         variants={containerVariants}
@@ -160,7 +145,7 @@ export function DashboardUI() {
             Equivalent annual CO₂ absorption required for current habits.
           </p>
           
-          <MetricBar value={60} />
+          <MetricBar value={60} segmented={false} />
           
           <div style={{ display: 'flex', gap: '2.5rem', marginTop: 'auto' }}>
             <div>

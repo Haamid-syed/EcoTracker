@@ -42,42 +42,66 @@ interface MetricBarProps {
 }
 
 /**
- * A sleek horizontal progress bar with a glowing tip.
+ * A sleek horizontal progress bar with a glowing tip and optional segmentation.
  */
-export const MetricBar = ({ value, color = 'var(--accent-neon)', height = '6px' }: MetricBarProps) => {
+export const MetricBar = ({ value, color = 'var(--accent-neon)', height = '6px', segmented = true }: MetricBarProps & { segmented?: boolean }) => {
+  const segments = 20;
+  const activeSegments = Math.round((value / 100) * segments);
+
   return (
     <div style={{ 
       width: '100%', 
       height, 
-      backgroundColor: 'rgba(255,255,255,0.05)', 
-      borderRadius: '10px',
+      display: 'flex',
+      gap: segmented ? '2px' : '0',
+      backgroundColor: segmented ? 'transparent' : 'rgba(255,255,255,0.05)', 
+      borderRadius: '2px',
       overflow: 'hidden',
       position: 'relative'
     }}>
-      <motion.div
-        initial={{ width: 0 }}
-        animate={{ width: `${Math.min(100, Math.max(0, value))}%` }}
-        transition={{ type: 'spring', stiffness: 50, damping: 20 }}
-        style={{
-          height: '100%',
-          backgroundColor: color,
-          boxShadow: `0 0 10px ${color}`,
-          borderRadius: '10px',
-          position: 'relative'
-        }}
-      >
-        {/* Glowing tip */}
-        <div style={{
-          position: 'absolute',
-          right: 0,
-          top: 0,
-          height: '100%',
-          width: '4px',
-          backgroundColor: 'white',
-          boxShadow: `0 0 15px white`,
-          opacity: 0.8
-        }} />
-      </motion.div>
+      {segmented ? (
+        Array.from({ length: segments }).map((_, i) => (
+          <motion.div
+            key={i}
+            initial={{ opacity: 0.1 }}
+            animate={{ 
+              opacity: i < activeSegments ? 1 : 0.1,
+              backgroundColor: i < activeSegments ? color : 'rgba(255,255,255,0.1)',
+              boxShadow: i < activeSegments ? `0 0 8px ${color}` : 'none'
+            }}
+            style={{
+              flex: 1,
+              height: '100%',
+              borderRadius: '1px',
+              transition: 'all 0.3s ease'
+            }}
+          />
+        ))
+      ) : (
+        <motion.div
+          initial={{ width: 0 }}
+          animate={{ width: `${Math.min(100, Math.max(0, value))}%` }}
+          transition={{ type: 'spring', stiffness: 50, damping: 20 }}
+          style={{
+            height: '100%',
+            backgroundColor: color,
+            boxShadow: `0 0 12px ${color}`,
+            borderRadius: '10px',
+            position: 'relative'
+          }}
+        >
+          <div style={{
+            position: 'absolute',
+            right: 0,
+            top: 0,
+            height: '100%',
+            width: '2px',
+            backgroundColor: 'white',
+            boxShadow: `0 0 10px white`,
+            opacity: 0.8
+          }} />
+        </motion.div>
+      )}
     </div>
   );
 };
