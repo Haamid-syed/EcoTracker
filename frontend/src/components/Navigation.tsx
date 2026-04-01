@@ -1,6 +1,6 @@
 import { motion } from 'framer-motion';
 import { NavLink, Link } from 'react-router-dom';
-import { LayoutDashboard, Home, Activity } from 'lucide-react';
+import { LayoutDashboard, Home, Activity, BookOpen } from 'lucide-react';
 
 export const Navbar = () => {
   return (
@@ -31,6 +31,9 @@ export const Navbar = () => {
           </NavLink>
           <NavLink to="/dashboard" style={({ isActive }) => ({ ...navLinkStyle, color: isActive ? 'var(--accent-neon)' : 'var(--text-muted)' })}>
             <LayoutDashboard size={16} /> Dashboard
+          </NavLink>
+          <NavLink to="/documentation" style={({ isActive }) => ({ ...navLinkStyle, color: isActive ? 'var(--accent-neon)' : 'var(--text-muted)' })}>
+            <BookOpen size={16} /> Docs
           </NavLink>
           
           <div style={{ width: '1px', height: '20px', background: 'rgba(255,255,255,0.1)', margin: '0 0.5rem' }} />
@@ -67,8 +70,8 @@ export const Footer = () => {
           <h4 style={{ color: 'white', marginBottom: '1.5rem', fontSize: '0.9rem', textTransform: 'uppercase', letterSpacing: '0.1em' }}>Intelligence</h4>
           <ul style={{ listStyle: 'none', padding: 0, margin: 0, display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
             <li><Link to="/dashboard" style={footerLinkStyle}>Telemetry Hub</Link></li>
-            <li><Link to="/metrics" style={footerLinkStyle}>Global Metrics</Link></li>
-            <li><Link to="/about" style={footerLinkStyle}>Carbon Methodology</Link></li>
+            <li><Link to="/documentation" style={footerLinkStyle}>Documentation</Link></li>
+            <li><Link to="/" style={footerLinkStyle}>Carbon Methodology</Link></li>
           </ul>
         </div>
         

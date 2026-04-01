@@ -1,6 +1,6 @@
 import { useEffect, useRef } from 'react';
 import { motion } from 'framer-motion';
-import { Activity, Box, Layers, ArrowUp } from 'lucide-react';
+import { Activity, Box, Layers, ArrowUp, ArrowRight } from 'lucide-react';
 import './index.css';
 
 const DNABackground = () => {
@@ -169,6 +169,7 @@ export const LandingPage = () => {
                             background: 'var(--accent-neon)',
                             color: '#050b09',
                             padding: '18px 42px',
+                            minWidth: '220px',
                             borderRadius: '40px',
                             fontWeight: 800,
                             fontSize: '1rem',
@@ -176,35 +177,58 @@ export const LandingPage = () => {
                             border: 'none',
                             display: 'flex',
                             alignItems: 'center',
+                            justifyContent: 'center',
                             gap: '0.75rem',
                             textTransform: 'uppercase',
-                            letterSpacing: '0.1em',
                             transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
-                            boxShadow: '0 0 30px rgba(46, 204, 113, 0.4)'
+                            letterSpacing: '0.1em',
+                            boxShadow: '0 10px 30px rgba(46, 204, 113, 0.4), 0 0 20px rgba(46, 204, 113, 0.2)'
                         }}
-                        onMouseOver={(e) => { e.currentTarget.style.transform = 'translateY(-3px) scale(1.02)'; e.currentTarget.style.boxShadow = '0 10px 40px rgba(46, 204, 113, 0.6)'; }}
-                        onMouseOut={(e) => { e.currentTarget.style.transform = 'translateY(0) scale(1)'; e.currentTarget.style.boxShadow = '0 0 30px rgba(46, 204, 113, 0.4)'; }}
+                        onMouseOver={(e) => {
+                            e.currentTarget.style.transform = 'scale(1.05) translateY(-5px)';
+                            e.currentTarget.style.boxShadow = '0 15px 40px rgba(46, 204, 113, 0.5), 0 0 30px rgba(46, 204, 113, 0.3)';
+                        }}
+                        onMouseOut={(e) => {
+                            e.currentTarget.style.transform = 'scale(1)';
+                            e.currentTarget.style.boxShadow = '0 10px 30px rgba(46, 204, 113, 0.4), 0 0 20px rgba(46, 204, 113, 0.2)';
+                        }}
                     >
-                        ENTER DASHBOARD <span style={{ fontSize: '1.4rem' }}>→</span>
+                        Dashboard <Activity size={20} />
                     </button>
-                    <button style={{
-                        background: 'rgba(255,255,255,0.03)',
-                        backdropFilter: 'blur(10px)',
-                        color: 'white',
-                        padding: '18px 42px',
-                        borderRadius: '40px',
-                        fontWeight: 800,
-                        fontSize: '0.95rem',
-                        cursor: 'pointer',
-                        border: '1px solid rgba(255,255,255,0.1)',
-                        textTransform: 'uppercase',
-                        letterSpacing: '0.1em',
-                        transition: 'all 0.3s'
-                    }}
-                        onMouseOver={(e) => { e.currentTarget.style.background = 'rgba(255,255,255,0.08)'; e.currentTarget.style.borderColor = 'rgba(255,255,255,0.2)' }}
-                        onMouseOut={(e) => { e.currentTarget.style.background = 'rgba(255,255,255,0.03)'; e.currentTarget.style.borderColor = 'rgba(255,255,255,0.1)' }}
+
+                    <button
+                        onClick={() => navigate('/documentation')}
+                        style={{
+                            background: 'rgba(52, 211, 153, 0.05)',
+                            color: 'white',
+                            padding: '18px 42px',
+                            minWidth: '220px',
+                            borderRadius: '40px',
+                            fontWeight: 800,
+                            fontSize: '1rem',
+                            cursor: 'pointer',
+                            border: '1px solid rgba(52, 211, 153, 0.3)',
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            gap: '0.75rem',
+                            textTransform: 'uppercase',
+                            transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+                            letterSpacing: '0.1em',
+                            backdropFilter: 'blur(10px)'
+                        }}
+                        onMouseOver={(e) => {
+                            e.currentTarget.style.transform = 'scale(1.05) translateY(-5px)';
+                            e.currentTarget.style.background = 'rgba(52, 211, 153, 0.1)';
+                            e.currentTarget.style.borderColor = 'rgba(52, 211, 153, 0.6)';
+                        }}
+                        onMouseOut={(e) => {
+                            e.currentTarget.style.transform = 'scale(1)';
+                            e.currentTarget.style.background = 'rgba(52, 211, 153, 0.05)';
+                            e.currentTarget.style.borderColor = 'rgba(52, 211, 153, 0.3)';
+                        }}
                     >
-                        DOCUMENTATION
+                        Documentation <ArrowRight size={20} />
                     </button>
                 </motion.div>
             </div>
@@ -229,14 +253,14 @@ function ArchitecturalFeatures() {
             >
                 <div>
                     <div style={{ color: 'var(--accent-neon)', fontSize: '0.85rem', fontWeight: 800, letterSpacing: '0.2em', textTransform: 'uppercase', marginBottom: '1rem' }}>
-                        INTEGRATED INTELLIGENCE
+                        CORE CAPABILITIES
                     </div>
                     <h2 style={{ fontSize: '3.5rem', margin: 0, fontWeight: 700, color: '#f0fdf4', letterSpacing: '-0.02em', textTransform: 'uppercase', fontFamily: 'var(--font-heading)' }}>
-                        ARCHITECTURAL <span style={{ color: 'rgba(255,255,255,0.7)' }}>FEATURES</span>
+                        HOW IT <span style={{ color: 'rgba(255,255,255,0.7)' }}>WORKS</span>
                     </h2>
                 </div>
                 <p style={{ maxWidth: '400px', color: 'var(--text-muted)', fontSize: '1.05rem', lineHeight: '1.6' }}>
-                    Harnessing low-level system hooks and generative AI to deliver the most comprehensive ecological telemetry dashboard ever built.
+                    Polling system hardware via psutil to calculate real-time power draw and carbon emissions from your laptop's actual resource usage.
                 </p>
             </motion.div>
 
@@ -259,7 +283,7 @@ function ArchitecturalFeatures() {
                         </div>
                         <h3 style={{ fontSize: '1.5rem', fontWeight: 700, margin: '0 0 1rem 0', color: 'white', letterSpacing: '0.02em', textTransform: 'uppercase' }}>REAL-TIME TELEMETRY</h3>
                         <p style={{ color: 'var(--text-muted)', lineHeight: '1.6', fontSize: '1.05rem', margin: 0, maxWidth: '85%' }}>
-                            Deep integration with kernel-level performance counters for CPU, GPU, and RAM power profiling.
+                            Monitors CPU load, memory pressure, GPU utilization, battery health, and disk usage with per-core breakdown and frequency tracking.
                         </p>
                         <div style={{ marginTop: 'auto', display: 'flex', justifyContent: 'center', paddingTop: '3rem' }}>
                             <motion.div
@@ -270,7 +294,7 @@ function ArchitecturalFeatures() {
                         </div>
                     </motion.div>
 
-                    {/* Power Draw Analysis box */}
+                    {/* Carbon Footprint Calculation box */}
                     <motion.div
                         initial={{ opacity: 0, y: 20 }}
                         whileInView={{ opacity: 1, y: 0 }}
@@ -281,29 +305,29 @@ function ArchitecturalFeatures() {
                     >
                         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '1rem' }}>
                             <div>
-                                <h3 style={{ fontSize: '1.5rem', fontWeight: 700, margin: '0 0 0.5rem 0', color: 'white', letterSpacing: '0.02em', textTransform: 'uppercase' }}>POWER DRAW ANALYSIS</h3>
-                                <p style={{ color: 'var(--text-muted)', fontSize: '1rem', margin: 0 }}>Sub-millisecond polling of battery discharge rates.</p>
+                                <h3 style={{ fontSize: '1.5rem', fontWeight: 700, margin: '0 0 0.5rem 0', color: 'white', letterSpacing: '0.02em', textTransform: 'uppercase' }}>CARBON FOOTPRINT</h3>
+                                <p style={{ color: 'var(--text-muted)', fontSize: '1rem', margin: 0 }}>Translating watts into grams of CO₂ per hour.</p>
                             </div>
                             <div style={{ color: 'var(--accent-neon)', fontFamily: 'var(--font-mono)', fontSize: '1.5rem', fontWeight: 700 }}>
-                                142.0W
+                                gCO₂/hr
                             </div>
                         </div>
 
                         <div style={{ marginTop: '2.5rem' }}>
                             <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '0.6rem', fontSize: '0.75rem', fontWeight: 800, color: 'var(--text-muted)', letterSpacing: '0.15em' }}>
-                                <span>HARDWARE CORE</span>
-                                <span>82%</span>
+                                <span>CPU + GPU POWER</span>
+                                <span>72%</span>
                             </div>
                             <div style={{ height: '4px', background: 'rgba(255,255,255,0.05)', borderRadius: '2px', overflow: 'hidden', marginBottom: '1.8rem' }}>
-                                <motion.div initial={{ width: 0 }} whileInView={{ width: '82%' }} viewport={{ once: true }} transition={{ duration: 1, delay: 0.5 }} style={{ height: '100%', background: 'var(--accent-neon)', boxShadow: '0 0 10px var(--accent-neon)' }} />
+                                <motion.div initial={{ width: 0 }} whileInView={{ width: '72%' }} viewport={{ once: true }} transition={{ duration: 1, delay: 0.5 }} style={{ height: '100%', background: 'var(--accent-neon)', boxShadow: '0 0 10px var(--accent-neon)' }} />
                             </div>
 
                             <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '0.6rem', fontSize: '0.75rem', fontWeight: 800, color: 'var(--text-muted)', letterSpacing: '0.15em' }}>
-                                <span>DISPLAY MATRIX</span>
-                                <span>18%</span>
+                                <span>DISPLAY + IDLE</span>
+                                <span>28%</span>
                             </div>
                             <div style={{ height: '4px', background: 'rgba(255,255,255,0.05)', borderRadius: '2px', overflow: 'hidden' }}>
-                                <motion.div initial={{ width: 0 }} whileInView={{ width: '18%' }} viewport={{ once: true }} transition={{ duration: 1, delay: 0.7 }} style={{ height: '100%', background: 'var(--accent-neon)', boxShadow: '0 0 10px var(--accent-neon)' }} />
+                                <motion.div initial={{ width: 0 }} whileInView={{ width: '28%' }} viewport={{ once: true }} transition={{ duration: 1, delay: 0.7 }} style={{ height: '100%', background: 'var(--accent-neon)', boxShadow: '0 0 10px var(--accent-neon)' }} />
                             </div>
                         </div>
                     </motion.div>
@@ -311,7 +335,7 @@ function ArchitecturalFeatures() {
 
                 {/* Column 2: Middle Stack (3/12) */}
                 <div className="col-span-3" style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
-                    {/* Impact Engine box */}
+                    {/* Idle Process Detection box */}
                     <motion.div
                         initial={{ opacity: 0, y: 20 }}
                         whileInView={{ opacity: 1, y: 0 }}
@@ -323,13 +347,13 @@ function ArchitecturalFeatures() {
                         <div style={{ background: 'rgba(52, 211, 153, 0.1)', width: '48px', height: '48px', borderRadius: '12px', display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: '1.5rem', border: '1px solid rgba(52, 211, 153, 0.2)' }}>
                             <Box size={24} color="var(--accent-neon)" />
                         </div>
-                        <h3 style={{ fontSize: '1.25rem', fontWeight: 700, margin: '0 0 1rem 0', color: 'white', letterSpacing: '0.02em', textTransform: 'uppercase' }}>IMPACT ENGINE</h3>
+                        <h3 style={{ fontSize: '1.25rem', fontWeight: 700, margin: '0 0 1rem 0', color: 'white', letterSpacing: '0.02em', textTransform: 'uppercase' }}>IDLE DETECTION</h3>
                         <p style={{ color: 'var(--text-muted)', lineHeight: '1.6', fontSize: '0.95rem', margin: 0 }}>
-                            Dynamic CO2 calculations based on local power grid carbon intensity data.
+                            Tracks CPU time deltas to find processes with zero activity for 5+ minutes. Only flags non-interactive apps — never bluffs.
                         </p>
                     </motion.div>
 
-                    {/* Yearly Projection box */}
+                    {/* Optimization Comparison box */}
                     <motion.div
                         initial={{ opacity: 0, y: 20 }}
                         whileInView={{ opacity: 1, y: 0 }}
@@ -339,17 +363,17 @@ function ArchitecturalFeatures() {
                         style={{ background: 'rgba(16, 32, 27, 0.4)', padding: '2.5rem' }}
                     >
                         <div style={{ fontSize: '0.7rem', fontWeight: 800, color: 'var(--text-muted)', letterSpacing: '0.15em', marginBottom: '1.5rem', textTransform: 'uppercase' }}>
-                            YEARLY PROJECTION
+                            OPTIMIZATION ENGINE
                         </div>
                         <div style={{ display: 'flex', alignItems: 'flex-start', gap: '1rem', marginBottom: '1.8rem' }}>
                             <ArrowUp color="var(--accent-neon)" size={28} strokeWidth={3} />
                             <div>
-                                <div style={{ fontSize: '3rem', fontWeight: 700, color: 'white', lineHeight: 1, marginBottom: '0.3rem' }}>14.2</div>
-                                <div style={{ fontSize: '0.8rem', color: 'var(--text-muted)', letterSpacing: '0.1em', textTransform: 'uppercase', fontWeight: 700 }}>TREES REQUIRED</div>
+                                <div style={{ fontSize: '3rem', fontWeight: 700, color: 'white', lineHeight: 1, marginBottom: '0.3rem' }}>−15W</div>
+                                <div style={{ fontSize: '0.8rem', color: 'var(--text-muted)', letterSpacing: '0.1em', textTransform: 'uppercase', fontWeight: 700 }}>AVG. SAVINGS</div>
                             </div>
                         </div>
                         <p style={{ color: 'rgba(255,255,255,0.3)', fontSize: '0.75rem', lineHeight: '1.5', margin: 0, textTransform: 'uppercase', letterSpacing: '0.05em' }}>
-                            OFFSET CALCULATION BASED ON 2,400 USAGE HOURS.
+                            Compares current vs. optimized power draw based on real metrics.
                         </p>
                     </motion.div>
                 </div>
@@ -367,27 +391,27 @@ function ArchitecturalFeatures() {
                         <div style={{ background: 'rgba(52, 211, 153, 0.1)', width: '48px', height: '48px', borderRadius: '12px', display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: '1.5rem', border: '1px solid rgba(52, 211, 153, 0.2)' }}>
                             <Layers size={24} color="var(--accent-neon)" />
                         </div>
-                        <h3 style={{ fontSize: '1.25rem', fontWeight: 700, margin: '0 0 1rem 0', color: 'white', letterSpacing: '0.02em', textTransform: 'uppercase' }}>AI OPTIMIZATION</h3>
+                        <h3 style={{ fontSize: '1.25rem', fontWeight: 700, margin: '0 0 1rem 0', color: 'white', letterSpacing: '0.02em', textTransform: 'uppercase' }}>PROCESS INSIGHTS</h3>
                         <p style={{ color: 'var(--text-muted)', lineHeight: '1.6', fontSize: '0.95rem', margin: 0 }}>
-                            Heuristic detection of resource-heavy background processes.
+                            Top-5 resource consumers with sparkline trends, category badges, and per-process power cost breakdown.
                         </p>
 
                         <div style={{ marginTop: 'auto', display: 'flex', flexDirection: 'column', gap: '0.75rem', paddingTop: '3rem' }}>
                             {[
-                                { name: 'chrome.exe', status: 'SUSPENDED', color: 'var(--accent-neon)' },
-                                { name: 'docker.bin', status: 'THROTTLED', color: 'var(--accent-neon)' },
-                                { name: 'figma.node', status: 'OPTIMIZED', color: 'var(--accent-neon)' }
-                            ].map((proc, i) => (
+                                { label: 'CPU %', value: '18.2', trend: '↗' },
+                                { label: 'MEM', value: '2.1 GB', trend: '→' },
+                                { label: 'THREADS', value: '42', trend: '↘' },
+                            ].map((stat, i) => (
                                 <motion.div
-                                    key={proc.name}
+                                    key={stat.label}
                                     initial={{ opacity: 0, x: 20 }}
                                     whileInView={{ opacity: 1, x: 0 }}
                                     viewport={{ once: true }}
                                     transition={{ duration: 0.4, delay: 0.6 + (i * 0.1) }}
                                     style={{ display: 'flex', justifyContent: 'space-between', background: 'rgba(0,0,0,0.3)', padding: '12px 16px', borderRadius: '8px', border: '1px solid rgba(255,255,255,0.05)' }}
                                 >
-                                    <span style={{ color: 'var(--text-muted)', fontFamily: 'var(--font-mono)', fontSize: '0.85rem' }}>{proc.name}</span>
-                                    <span style={{ color: proc.color, fontSize: '0.75rem', fontWeight: 800, letterSpacing: '0.1em' }}>{proc.status}</span>
+                                    <span style={{ color: 'var(--text-muted)', fontFamily: 'var(--font-mono)', fontSize: '0.85rem' }}>{stat.label}</span>
+                                    <span style={{ color: 'var(--accent-neon)', fontSize: '0.85rem', fontWeight: 800, letterSpacing: '0.05em', fontFamily: 'var(--font-mono)' }}>{stat.value} {stat.trend}</span>
                                 </motion.div>
                             ))}
                         </div>

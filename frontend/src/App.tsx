@@ -4,6 +4,7 @@ import { useEffect } from 'react';
 import './index.css';
 import LandingPage from './LandingPage';
 import { DashboardUI } from './DashboardUI';
+import Documentation from './Documentation';
 import { Navbar, Footer } from './components/Navigation';
 
 /**
@@ -41,7 +42,7 @@ function App() {
               path="/"
               element={
                 <motion.div key="landing" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: 0.5 }}>
-                  <LandingPage  /* Using Link instead in LandingPage would be better, but we'll stick to Route navigation */ />
+                  <LandingPage />
                 </motion.div>
               }
             />
@@ -50,6 +51,14 @@ function App() {
               element={
                 <motion.div key="dashboard" initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -20 }} transition={{ duration: 0.5 }}>
                   <DashboardUI />
+                </motion.div>
+              }
+            />
+            <Route
+              path="/documentation"
+              element={
+                <motion.div key="docs" initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -20 }} transition={{ duration: 0.5 }}>
+                  <Documentation />
                 </motion.div>
               }
             />

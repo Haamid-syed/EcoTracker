@@ -1,85 +1,127 @@
-# 🌿 Eco-Tracker: Cyber-Organic System Intelligence
+# 🌿 Eco-Tracker: Real-Time Carbon Footprint Monitor
 
-Eco-Tracker is a high-end, real-time system monitoring SaaS that translates raw hardware telemetry into actionable environmental impact data. Moving beyond standard task managers, it provides a "Cyber-Organic" interface to help users optimize their digital carbon footprint through intelligent resource management.
+Eco-Tracker is a hardware telemetry dashboard that monitors your laptop's resource usage in real-time and calculates the resulting carbon footprint. It identifies idle processes, shows power consumption breakdowns, and provides metrics-derived suggestions to help reduce your environmental impact — without any AI guesswork.
+
+---
 
 ## ✨ Key Features
 
-### 🚀 Real-time Telemetry
-- **Hardware Monitoring:** Live tracking of CPU load, Memory pressure, GPU utilization, and Battery health.
-- **Micro-Metric Precision:** Monitor core frequencies, available RAM in GB, and granular battery discharge states.
+### 📊 Real-Time System Telemetry
+- **Hardware Monitoring:** Live tracking of CPU load (per-core), memory pressure, GPU utilization, battery health, and disk usage.
+- **2-second polling:** Dashboard refreshes every 2 seconds via the `/api/metrics` endpoint.
 
-### 🌍 Environmental Impact Engine
-- **Carbon Footprint Calculation:** Real-time translation of power draw into grams of CO₂ emitted per hour (g CO₂/hr).
-- **Power Draw Analysis:** Live visibility into system wattage consumption across different hardware components.
-- **Yearly Projection:** Estimates of annual energy usage and tree-absorption equivalents based on current habits.
+### 🌍 Carbon Footprint Calculation
+- **Power Draw Model:** Estimates system wattage from CPU%, GPU%, RAM, screen, and idle baseline using hardware power coefficients.
+- **CO₂ Conversion:** Translates watts to grams of CO₂ per hour using a configurable carbon intensity factor (default: India grid average, 0.82 kg CO₂/kWh).
+- **Yearly Projection:** Extrapolates current usage to annual kWh, kg CO₂, and tree-offset equivalents.
 
-### 🤖 Intelligent Optimization (AI)
-- **Automatic Resource Hog Detection:** Identifies "Idle Resource Hogs" and background processes that are draining power without adding value.
-- **Actionable Insights:** Dynamic suggestions with specific power-saving estimates (e.g., "Close Chrome to save 8.5W and 4.0g CO₂/hr").
-- **Severity Ranking:** Critical, Medium, and Low priority alerts to help you focus on the most impactful optimizations.
+### 🔍 Conservative Idle Process Detection
+- **CPU Time Delta Tracking:** Uses `proc.cpu_times()` to detect if a process's CPU time has genuinely stopped changing — not just low CPU percentage.
+- **5-Minute Threshold:** A process is only flagged idle after 5+ continuous minutes of zero CPU activity.
+- **Interactive App Exemption:** Browsers, IDEs, communication apps, and creative tools are *never* flagged as idle — these naturally have gaps between user interactions without being truly idle.
+- **Memory Threshold:** Only processes using >3% of system memory are considered for idle flagging.
 
-### 🎨 Next-Gen "Cyber-Organic" UI
-- **Bento Box Architecture:** A visually stunning, glassmorphic grid layout for hardware metrics.
-- **Fluid Motion:** Smooth, spring-based animations for all numerical data and entrance transitions.
-- **Atmospheric Design:** Deep emerald accents, SVG grain overlays, and organic blur effects for a premium SaaS experience.
+### 📋 Process Table (Top 5)
+- **Resource Ranking:** Shows the top 5 processes sorted by combined CPU + memory usage.
+- **Category Badges:** Automatic categorization (Browser, Media, Dev, Communication, Creative, System, Other).
+- **Sparkline Trends:** Inline SVG charts showing last 30 samples of CPU and memory history per process.
+- **Idle Badges:** Golden "💤 Xm idle" badge only appears for genuinely verified idle processes.
+
+### 💡 Metrics-Derived Insights
+Suggestions are generated from **measured data only** — no AI, no guessing:
+- **High CPU Alert:** Triggered only when a single process uses >25% CPU.
+- **Verified Idle Processes:** Only shown when processes have had zero CPU delta for 5+ minutes (non-interactive apps only).
+- **Memory Pressure:** Triggered at >85% RAM — never blames specific apps.
+- **Background Noise:** Flags when >15 tiny background processes accumulate.
+- **GPU Alert:** Triggered at >40% GPU utilization.
+- **Battery Warnings:** Context-aware suggestions when unplugged at <50% or <20%.
+- **No Filler:** If nothing is wrong, the panel shows "System Healthy" — no forced suggestions.
+
+### ⚡ Carbon Optimization Comparison
+- **Before/After Gauge:** Animated SVG arc showing current vs. optimized power draw.
+- **Savings Breakdown:** Shows potential watt and CO₂ savings if suggestions are followed.
+- **Yearly Impact:** kWh/year saved and trees-equivalent visualization.
+
+---
+
+## 🎨 Design
+
+"Tech-Noir" aesthetic:
+- **Background:** `#050807` (deepest mint-black)
+- **Accent:** `#2ecc71` (neon emerald)
+- **Cards:** Glassmorphic panels with `rgba(13, 18, 16, 0.7)` backdrop
+- **Typography:** Space Grotesk (headings), JetBrains Mono (metrics/data)
+- **Animations:** Framer Motion spring-based transitions, staggered grid entrance
 
 ---
 
 ## 🛠 Tech Stack
 
-- **Backend:** FastAPI (Python 3.13 Ready)
-- **Frontend:** React + Vite + TypeScript
-- **Styling:** Vanilla CSS (Cyber-Organic Design System)
-- **Animation:** Framer Motion
-- **Data:** psutil, NumPy, Pandas
+| Layer | Technology |
+|-------|-----------|
+| Backend | FastAPI (Python 3.13) |
+| Frontend | React 18 + Vite + TypeScript |
+| Styling | Vanilla CSS (Design system tokens) |
+| Animation | Framer Motion |
+| System Data | psutil (CPU, RAM, Disk, Battery, Processes) |
+| Icons | Lucide React |
+| Routing | React Router v6 |
 
 ---
 
 ## 🚀 Getting Started
 
-### 1. Backend Setup (API)
+### 1. Backend Setup
 ```bash
-# Clone the repository
-git clone <repository-url>
 cd Eco_Tracker
-
-# Set up virtual environment
 python3 -m venv venv
 source venv/bin/activate
-
-# Install dependencies
 pip install -r requirements.txt
-
-# Start the FastAPI server
-uvicorn app:app --host 0.0.0.0 --port 8000 --reload
+python app.py
+# API runs at http://localhost:8000
 ```
 
-### 2. Frontend Setup (Dashboard)
+### 2. Frontend Setup
 ```bash
-# Navigate to frontend directory
 cd frontend
-
-# Install dependencies
 npm install
-
-# Start the Vite development server
 npm run dev
+# UI runs at http://localhost:5173
 ```
 
-Visit `http://localhost:5173` to view your dashboard. The API will be running at `http://localhost:8000/api/metrics`.
+Visit `http://localhost:5173` — the landing page explains the project; click **Dashboard** to see live telemetry.
 
 ---
 
 ## 📁 Project Structure
 
-- `app.py`: FastAPI server handling hardware telemetry and optimization logic.
-- `requirements.txt`: Python backend dependencies.
-- `frontend/`: React application directory.
-  - `src/App.tsx`: Main dashboard component with Framer Motion logic.
-  - `src/index.css`: Cyber-Organic design system and utility classes.
-- `performance_history.json`: Local storage for historical performance tracking.
+```
+Eco_Tracker/
+├── app.py                          # FastAPI backend: telemetry, carbon calc, optimization
+├── requirements.txt                # Python deps (fastapi, psutil, uvicorn, etc.)
+├── CONTEXT_HANDOVER.md             # Project context for development continuity
+├── frontend/
+│   ├── src/
+│   │   ├── App.tsx                 # Router + global layout (Navbar, Footer)
+│   │   ├── DashboardUI.tsx         # Main telemetry grid (12-col bento layout)
+│   │   ├── LandingPage.tsx         # Hero + features section
+│   │   ├── index.css               # Design system tokens + responsive grid
+│   │   └── components/
+│   │       ├── Navigation.tsx      # Glassmorphic navbar + footer
+│   │       ├── Visuals.tsx         # MetricBar, WavyLineChart, SmallLabel
+│   │       ├── ProcessTable.tsx    # Live top-5 process table with sparklines
+│   │       ├── InsightsPanel.tsx   # Expandable suggestion cards
+│   │       └── CarbonComparison.tsx # Before/after arc gauge
+│   ├── package.json
+│   └── vite.config.ts
+└── performance_history.json        # Local historical data (auto-generated)
+```
 
 ---
 
-## 💡 Note
-Eco-Tracker works best on macOS and Windows with local sensor access. GPU monitoring requires NVIDIA hardware (nvidia-smi) on Windows systems.
+## ⚠️ Notes
+
+- **macOS Recommended:** psutil has best coverage on macOS. GPU monitoring uses Apple Silicon integrated metrics (no discrete GPU driver needed).
+- **No Process Killing:** Eco-Tracker never terminates or suspends processes. It only provides information and suggestions.
+- **No AI:** All suggestions are derived from measurable system metrics. Nothing is predicted, hallucinated, or assumed.
+- **Privacy:** All data stays local. No telemetry is sent to any external server.

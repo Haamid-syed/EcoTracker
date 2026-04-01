@@ -95,6 +95,8 @@ class SystemMonitor:
         self.carbon_history = deque(maxlen=history_length)
         self.timestamps = deque(maxlen=history_length)
         self.process_history = {}  # Track processes over time
+        self.process_cpu_times = {}  # Track cpu_times for idle detection
+        self.process_idle_since = {}  # Timestamp when process was last detected as idle
         
     def get_cpu_usage(self):
         """Get current CPU usage with per-core breakdown"""
@@ -143,15 +145,17 @@ class SystemMonitor:
         return gpu_info
     
     def get_detailed_processes(self):
-        """Get detailed process information with resource tracking"""
+        """Get detailed process information with resource tracking and idle detection"""
         processes = []
         system_type = platform.system()
         system_procs = SYSTEM_PROCESSES.get(system_type, [])
+        now = time.time()
         
         for proc in psutil.process_iter(['pid', 'name', 'cpu_percent', 'memory_percent', 'status', 'num_threads']):
             try:
                 info = proc.info
-                # Resolve process name with fallbacks: info['name'] -> proc.name() -> exe -> cmdline
+                pid = info.get('pid')
+                # Resolve process name with fallbacks
                 name = info.get('name')
                 if not name or name.strip() == '':
                     try:
@@ -184,7 +188,7 @@ class SystemMonitor:
                 # Only track processes using resources
                 if cpu_val > 0.1 or mem_val > 0.5:
                     proc_data = {
-                        'pid': info.get('pid'),
+                        'pid': pid,
                         'name': name,
                         'cpu': cpu_val,
                         'memory': mem_val,
@@ -195,17 +199,71 @@ class SystemMonitor:
                     # Categorize process
                     proc_data['category'] = self._categorize_process(name)
                     
-                    # Track historical usage
+                    # ---- CONSERVATIVE IDLE DETECTION ----
+                    # Interactive apps (browsers, IDEs, comms) naturally have
+                    # idle CPU moments between user actions. We must NOT flag
+                    # them as idle just because CPU time didn't change for a
+                    # few seconds. Only flag a process as idle if:
+                    #   1) Its CPU time hasn't changed for 5+ MINUTES straight
+                    #   2) It's NOT a known interactive application
+                    #   3) It holds significant memory (>3%)
+                    is_idle = False
+                    idle_duration = 0
+                    
+                    # Interactive app categories that should NEVER be flagged
+                    # as idle — the user is likely looking at them right now
+                    interactive_categories = {'browsers', 'development', 'communication', 'creative'}
+                    is_interactive = proc_data['category'] in interactive_categories
+                    
+                    try:
+                        cpu_times = proc.cpu_times()
+                        total_cpu_time = cpu_times.user + cpu_times.system
+                        proc_key = f"{pid}_{name}"
+                        
+                        if proc_key in self.process_cpu_times:
+                            prev_time, prev_timestamp = self.process_cpu_times[proc_key]
+                            time_delta = now - prev_timestamp
+                            cpu_time_delta = total_cpu_time - prev_time
+                            
+                            # Only consider idle if CPU time is truly
+                            # unchanged AND the process eats >3% memory
+                            # AND it is NOT an interactive app
+                            if (time_delta > 2
+                                    and cpu_time_delta < 0.01
+                                    and mem_val > 3.0
+                                    and not is_interactive):
+                                if proc_key not in self.process_idle_since:
+                                    self.process_idle_since[proc_key] = now
+                                idle_duration = now - self.process_idle_since[proc_key]
+                                # Only report as idle after 5 full minutes
+                                if idle_duration >= 300:
+                                    is_idle = True
+                                else:
+                                    is_idle = False
+                            else:
+                                # Process is active, reset idle timer
+                                self.process_idle_since.pop(proc_key, None)
+                        
+                        self.process_cpu_times[proc_key] = (total_cpu_time, now)
+                    except (psutil.NoSuchProcess, psutil.AccessDenied):
+                        pass
+                    
+                    proc_data['is_idle'] = is_idle
+                    proc_data['idle_duration'] = round(idle_duration) if is_idle else 0
+                    
+                    # Track historical usage (sparkline data)
                     if name in self.process_history:
                         hist = self.process_history[name]
                         hist['cpu_samples'].append(cpu_val)
                         hist['mem_samples'].append(mem_val)
-                        # Keep last 30 samples
+                        # Keep last 30 samples for sparkline
                         if len(hist['cpu_samples']) > 30:
                             hist['cpu_samples'].pop(0)
                             hist['mem_samples'].pop(0)
                         proc_data['avg_cpu'] = sum(hist['cpu_samples']) / len(hist['cpu_samples'])
                         proc_data['avg_mem'] = sum(hist['mem_samples']) / len(hist['mem_samples'])
+                        proc_data['cpu_sparkline'] = list(hist['cpu_samples'])
+                        proc_data['mem_sparkline'] = list(hist['mem_samples'])
                     else:
                         self.process_history[name] = {
                             'cpu_samples': [cpu_val],
@@ -213,6 +271,8 @@ class SystemMonitor:
                         }
                         proc_data['avg_cpu'] = cpu_val
                         proc_data['avg_mem'] = mem_val
+                        proc_data['cpu_sparkline'] = [cpu_val]
+                        proc_data['mem_sparkline'] = [mem_val]
                     
                     processes.append(proc_data)
                     
@@ -273,23 +333,30 @@ class OptimizationAnalyzer:
         self.baseline_power = 100
         
     def analyze_system(self, cpu_data, memory_data, processes, gpu_data, battery_data, current_power):
-        """Analyze system and generate intelligent optimization suggestions"""
+        """Analyze system and generate metrics-derived optimization suggestions.
+        
+        Only produces suggestions when there is a genuine, measurable issue.
+        Never guesses whether a user is 'actively using' an application —
+        instead relies on the conservative idle detection from SystemMonitor
+        which requires 5+ minutes of zero CPU activity on non-interactive apps.
+        """
         suggestions = []
         total_power_savings = 0
         
-        # Analyze individual processes
-        high_cpu_procs = [p for p in processes if p['cpu'] > 15]
-        moderate_cpu_procs = [p for p in processes if 5 < p['cpu'] <= 15]
-        high_mem_procs = [p for p in processes if p['memory'] > 8]
-        moderate_mem_procs = [p for p in processes if 3 < p['memory'] <= 8]
+        # --- Only use processes that were genuinely flagged idle by the
+        #     conservative cpu-time-delta detector (5 min threshold) ---
+        verified_idle_procs = [p for p in processes
+                               if p.get('is_idle', False) and p['idle_duration'] >= 300]
         
-        # Idle but resource-consuming processes (low CPU but high memory or vice versa)
-        idle_heavy_procs = [p for p in processes if p['cpu'] < 2 and p['memory'] > 5]
+        # High CPU — factual, not speculative
+        high_cpu_procs = [p for p in processes if p['cpu'] > 25]
         
-        # Check for unnecessary background processes
-        background_procs = [p for p in processes if 0.5 < p['cpu'] < 3 and p['avg_cpu'] < 2]
+        # Background process noise (many tiny procs)
+        background_procs = [p for p in processes
+                            if p['cpu'] < 1 and p['memory'] < 1
+                            and p.get('category') == 'other']
         
-        # 1. HIGH CPU USAGE ANALYSIS
+        # 1. HIGH CPU USAGE — only when genuinely extreme (>25%)
         if high_cpu_procs:
             proc_names = [p['name'] for p in high_cpu_procs[:3]]
             proc_details = [(p['name'], p['cpu'], p['category']) for p in high_cpu_procs[:3]]
@@ -297,107 +364,87 @@ class OptimizationAnalyzer:
             power_savings = len(high_cpu_procs) * 8
             total_power_savings += power_savings
             
-            # Build detailed paragraph
-            if len(high_cpu_procs) == 1:
-                proc = high_cpu_procs[0]
-                description = f"The application **{proc['name']}** is currently consuming {proc['cpu']:.1f}% of your CPU resources, which is significantly high. "
-                if proc['category'] != 'other':
-                    description += f"As a {proc['category']} application, it may be performing heavy operations in the background. "
-                description += f"Closing this application could immediately reduce your system's power consumption by approximately **{power_savings}W** and significantly improve responsiveness. "
-                description += f"If you're not actively using it, consider closing it or checking if there are any stuck processes within the application."
-            else:
-                total_cpu = sum(p['cpu'] for p in high_cpu_procs)
-                description = f"Multiple applications are consuming excessive CPU resources (combined {total_cpu:.1f}%). "
-                description += f"The top offenders are: **{', '.join(proc_names)}**. "
-                description += f"These {len(high_cpu_procs)} applications are collectively draining significant power from your system. "
-                description += f"Closing unnecessary ones could reduce power consumption by up to **{power_savings}W** and free up processing power for tasks that matter. "
-                description += f"Review which applications you're actively using and consider closing the rest."
+            total_cpu = sum(p['cpu'] for p in high_cpu_procs)
+            description = f"Your CPU usage is elevated at **{cpu_data['total']:.1f}%** overall. "
+            description += f"The processes contributing most are: **{', '.join(proc_names)}** (combined {total_cpu:.1f}% CPU). "
+            description += f"High sustained CPU usage draws approximately **{power_savings}W** of additional power. "
+            description += f"If any of these are not needed right now, closing them would reduce power draw and heat generation."
             
             suggestions.append({
                 'type': 'high',
                 'icon': '⚡',
-                'title': 'Critical: High CPU Usage Detected',
+                'title': 'High CPU Usage Detected',
                 'description': description,
                 'processes': proc_details,
                 'power_savings': power_savings,
                 'carbon_savings': power_savings * 0.475,
-                'action': 'Close or restart the mentioned applications'
+                'action': 'Check if any of the listed processes can be closed'
             })
         
-        # 2. IDLE RESOURCE HOGS
-        if idle_heavy_procs:
-            proc_names = [p['name'] for p in idle_heavy_procs[:3]]
-            proc_details = [(p['name'], p['memory'], p['category']) for p in idle_heavy_procs[:3]]
+        # 2. VERIFIED IDLE PROCESSES — only those with 5+ min of zero activity
+        #    on non-interactive apps. No guessing.
+        if verified_idle_procs:
+            proc_names = [p['name'] for p in verified_idle_procs[:3]]
+            proc_details = [(p['name'], p['memory'], p['category']) for p in verified_idle_procs[:3]]
             
-            power_savings = len(idle_heavy_procs) * 3
+            power_savings = len(verified_idle_procs) * 3
             total_power_savings += power_savings
             
-            total_mem = sum(p['memory'] for p in idle_heavy_procs)
-            description = f"Your system has {len(idle_heavy_procs)} application(s) that appear to be idle but are still consuming significant memory ({total_mem:.1f}% total). "
-            description += f"Applications like **{', '.join(proc_names[:3])}** are sitting in the background using RAM without doing meaningful work. "
-            description += f"When RAM is heavily used, your system works harder and consumes more power. "
-            description += f"Closing these idle applications could save approximately **{power_savings}W** and free up {total_mem:.0f}% of your memory. "
-            description += f"This will make your system more responsive and energy-efficient, especially if you're running on battery power."
+            total_mem = sum(p['memory'] for p in verified_idle_procs)
+            idle_mins = [f"{p['name']} ({p['idle_duration'] // 60}m)" for p in verified_idle_procs[:3]]
+            description = f"**{len(verified_idle_procs)}** non-interactive process(es) have had zero CPU activity for over 5 minutes while holding **{total_mem:.1f}%** of memory: {', '.join(idle_mins)}. "
+            description += f"Since these haven't performed any work in minutes, they are likely safe to close. "
+            description += f"Closing them could free up memory and save approximately **{power_savings}W**."
             
             suggestions.append({
                 'type': 'medium',
                 'icon': '💤',
-                'title': 'Idle Applications Consuming Resources',
+                'title': 'Verified Idle Processes Detected',
                 'description': description,
                 'processes': proc_details,
                 'power_savings': power_savings,
                 'carbon_savings': power_savings * 0.475,
-                'action': 'Close applications you\'re not actively using'
+                'action': 'Consider closing the listed idle processes'
             })
         
-        # 3. MEMORY PRESSURE
-        if memory_data['percent'] > 75 and high_mem_procs:
-            proc_names = [p['name'] for p in high_mem_procs[:3]]
-            proc_details = [(p['name'], p['memory'], p['category']) for p in high_mem_procs[:3]]
-            
-            power_savings = len(high_mem_procs) * 4
+        # 3. MEMORY PRESSURE — report the fact, don't blame specific apps
+        if memory_data['percent'] > 85:
+            power_savings = 5
             total_power_savings += power_savings
             
-            description = f"Your system is experiencing memory pressure with {memory_data['percent']:.0f}% of RAM currently in use ({memory_data['used']:.1f}GB of {memory_data['total']:.1f}GB). "
-            description += f"The main contributors are: **{', '.join(proc_names)}**, which are collectively using a substantial portion of your available memory. "
-            description += f"High memory usage forces your system to work harder, increases heat generation, and significantly impacts battery life. "
-            description += f"Closing {len(high_mem_procs)} of these memory-intensive applications could save around **{power_savings}W** of power and prevent potential system slowdowns. "
-            description += f"If you need these applications, consider closing browser tabs or saving your work and restarting them to clear memory leaks."
+            description = f"Your system memory is at **{memory_data['percent']:.0f}%** ({memory_data['used']:.1f}GB of {memory_data['total']:.1f}GB). "
+            description += f"When memory pressure is this high, the system uses swap which increases disk I/O and power consumption by approximately **{power_savings}W**. "
+            description += f"Consider closing any applications or browser tabs you're not actively working with to free up memory."
             
             suggestions.append({
                 'type': 'high',
                 'icon': '💾',
-                'title': 'Critical: High Memory Pressure',
+                'title': 'High Memory Pressure',
                 'description': description,
-                'processes': proc_details,
+                'processes': [],
                 'power_savings': power_savings,
                 'carbon_savings': power_savings * 0.475,
-                'action': 'Close memory-heavy applications or restart them'
+                'action': 'Free up memory by closing unused tabs or applications'
             })
         
-        # 4. BACKGROUND PROCESS ACCUMULATION
-        if len(background_procs) > 8:
-            proc_names = [p['name'] for p in background_procs[:5]]
-            
-            power_savings = 6
+        # 4. BACKGROUND PROCESS ACCUMULATION — higher threshold
+        if len(background_procs) > 15:
+            power_savings = 4
             total_power_savings += power_savings
             
-            description = f"Your system is running **{len(background_procs)} background processes** that are quietly consuming resources. "
-            description += f"While individually small, together they create unnecessary load on your CPU and memory. "
-            description += f"Common culprits include auto-updaters, sync services, and startup programs you may not need running constantly. "
-            description += f"Examples include: **{', '.join(proc_names)}**. "
-            description += f"Closing or disabling unnecessary background processes could save approximately **{power_savings}W** and improve overall system responsiveness. "
-            description += f"Consider reviewing your startup programs and disabling services you don't regularly use."
+            description = f"Your system has **{len(background_procs)}** small background processes running. "
+            description += f"While each is individually lightweight, together they contribute to baseline power draw. "
+            description += f"You may want to review startup programs and disable auto-updaters or sync services you don't need running constantly."
             
             suggestions.append({
                 'type': 'medium',
                 'icon': '🔄',
-                'title': 'Too Many Background Processes',
+                'title': 'Many Background Processes',
                 'description': description,
                 'processes': [(p['name'], p['cpu'], 'background') for p in background_procs[:5]],
                 'power_savings': power_savings,
                 'carbon_savings': power_savings * 0.475,
-                'action': 'Review and close unnecessary background services'
+                'action': 'Review startup programs and background services'
             })
         
         # 5. GPU ANALYSIS
@@ -487,25 +534,8 @@ class OptimizationAnalyzer:
                     'action': 'Enable power-saving mode and reduce brightness'
                 })
         
-        # 7. SYSTEM RUNNING WELL
-        if cpu_data['total'] < 25 and memory_data['percent'] < 60 and len(suggestions) < 2:
-            description = f"Great news! Your system is running efficiently with CPU at {cpu_data['total']:.1f}% and memory at {memory_data['percent']:.1f}%. "
-            description += f"This optimal performance means you're already being energy-conscious. "
-            description += f"To maintain this efficiency: keep only necessary applications open, regularly update your software to benefit from performance improvements, "
-            description += f"periodically restart applications that tend to accumulate memory over time (especially web browsers), "
-            description += f"and consider using dark mode which can reduce screen power consumption on OLED displays. "
-            description += f"Your current configuration is saving approximately **5W** compared to a typical heavily-loaded system. Keep up the good work!"
-            
-            suggestions.append({
-                'type': 'low',
-                'icon': '✅',
-                'title': 'System Running Efficiently',
-                'description': description,
-                'processes': [],
-                'power_savings': 0,
-                'carbon_savings': 0,
-                'action': 'Maintain current good practices'
-            })
+        # No filler suggestions — if nothing is wrong, return empty list.
+        # The frontend handles the "all clear" state gracefully.
         
         return suggestions, total_power_savings
 
@@ -550,13 +580,22 @@ def get_metrics():
     current_yearly = carbon_calc.calculate_yearly_impact(current_power, 8)
     optimized_yearly = carbon_calc.calculate_yearly_impact(optimized_power, 8)
     
+    # Enrich top processes with memory in MB for display
+    top_5 = sorted(processes, key=lambda x: x['cpu'] + (x['memory'] or 0), reverse=True)[:5]
+    for p in top_5:
+        p['memory_mb'] = round((p['memory'] / 100) * memory_data['total'] * 1024, 1)  # MB
+    
+    # Count idle processes for summary
+    idle_processes = [p for p in processes if p.get('is_idle', False)]
+    idle_memory_pct = sum(p['memory'] for p in idle_processes)
+    
     return {
         "cpu": cpu_data,
         "memory": memory_data,
         "gpu": gpu_data,
         "battery": battery_data,
         "disk": disk_data,
-        "top_processes": sorted(processes, key=lambda x: x['cpu'] + (x['memory'] or 0), reverse=True)[:5],
+        "top_processes": top_5,
         "power": current_power,
         "carbon_per_hour": current_carbon_per_hour,
         "power_breakdown": power_breakdown,
@@ -566,6 +605,11 @@ def get_metrics():
         "suggestions": suggestions,
         "current_yearly": current_yearly,
         "optimized_yearly": optimized_yearly,
+        "idle_summary": {
+            "count": len(idle_processes),
+            "total_memory_percent": round(idle_memory_pct, 1),
+            "names": [p['name'] for p in idle_processes[:5]]
+        },
         "history": {
             "cpu": list(monitor.cpu_history),
             "memory": list(monitor.memory_history),
