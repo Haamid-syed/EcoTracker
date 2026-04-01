@@ -2,24 +2,25 @@
 @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700;800&display=swap');
 
 :root {
-  --bg-primary: #050b09; /* Very deep dark green/slate */
-  --bg-secondary: #0a1310;
-  --bg-glass: rgba(16, 32, 27, 0.4);
-  --border-glass: rgba(52, 211, 153, 0.15);
-  --border-glass-hover: rgba(52, 211, 153, 0.3);
+  --bg-primary: #050807; /* Ultra-deep charcoal-green background */
+  --bg-card: #0e1210;
+  --bg-glass: rgba(13, 18, 16, 0.7);
+  --border-glass: rgba(46, 204, 113, 0.1);
+  --border-glass-hover: rgba(46, 204, 113, 0.25);
   
-  --accent-neon: #34d399;
-  --accent-neon-dim: rgba(52, 211, 153, 0.2);
-  --accent-glow: 0 0 20px rgba(52, 211, 153, 0.3);
+  --accent-neon: #2ecc71; /* High-contrast neon emerald */
+  --accent-neon-dim: rgba(46, 204, 113, 0.2);
+  --accent-glow: 0 0 20px rgba(46, 204, 113, 0.25);
   
-  --warn-color: #f59e0b;
-  --warn-glass: rgba(245, 158, 11, 0.1);
-  --crit-color: #ef4444;
-  --crit-glass: rgba(239, 68, 68, 0.1);
+  --warn-color: #f1c40f; /* Flat Yellow */
+  --warn-glass: rgba(241, 196, 15, 0.1);
+  --crit-color: #e74c3c; /* Flat Red */
+  --crit-glass: rgba(231, 76, 60, 0.1);
   
-  --text-primary: #f0fdf4;
-  --text-secondary: #a7f3d0;
-  --text-muted: #64748b;
+  --text-primary: #f0fff4;
+  --text-secondary: #2ecc71;
+  --text-muted: #4b5563;
+  --text-telemetry: #4ade80; /* Brighter mint for micro-labels */
   
   --font-heading: 'Cabinet Grotesk', sans-serif;
   --font-body: 'Satoshi', sans-serif;
