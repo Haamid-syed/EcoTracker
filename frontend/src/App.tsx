@@ -1,9 +1,19 @@
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import { BrowserRouter, Routes, Route, useLocation } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
+import { useEffect } from 'react';
 import './index.css';
 import LandingPage from './LandingPage';
 import { DashboardUI } from './DashboardUI';
 import { Navbar, Footer } from './components/Navigation';
+
+/**
+ * Ensures page scroll is reset to top on navigation.
+ */
+const ScrollToTop = () => {
+  const { pathname } = useLocation();
+  useEffect(() => { window.scrollTo(0, 0); }, [pathname]);
+  return null;
+};
 
 /**
  * Main Layout wrapper to provide consistent navigation and footers.
@@ -23,24 +33,25 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
 function App() {
   return (
     <BrowserRouter>
+      <ScrollToTop />
       <Layout>
         <AnimatePresence mode="wait">
           <Routes>
-            <Route 
-              path="/" 
+            <Route
+              path="/"
               element={
                 <motion.div key="landing" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: 0.5 }}>
-                  <LandingPage onEnter={() => {}} /* Using Link instead in LandingPage would be better, but we'll stick to Route navigation */ />
+                  <LandingPage  /* Using Link instead in LandingPage would be better, but we'll stick to Route navigation */ />
                 </motion.div>
-              } 
+              }
             />
-            <Route 
-              path="/dashboard" 
+            <Route
+              path="/dashboard"
               element={
                 <motion.div key="dashboard" initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -20 }} transition={{ duration: 0.5 }}>
                   <DashboardUI />
                 </motion.div>
-              } 
+              }
             />
           </Routes>
         </AnimatePresence>

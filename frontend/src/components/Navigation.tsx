@@ -17,7 +17,7 @@ export const Navbar = () => {
         padding: '0.75rem 2rem'
       }}
     >
-      <div style={{ maxWidth: '1400px', margin: '0 auto', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+      <div className="nav-wrapper">
         <Link to="/" style={{ textDecoration: 'none', display: 'flex', alignItems: 'center', gap: '10px' }}>
           <div style={{ width: '32px', height: '32px', background: 'var(--accent-neon)', borderRadius: '8px', display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: '0 0 15px rgba(46,204,113,0.4)' }}>
             <Activity size={18} color="black" />
@@ -25,7 +25,7 @@ export const Navbar = () => {
           <span style={{ fontSize: '1.2rem', fontWeight: 800, color: 'white', letterSpacing: '-0.02em' }}>Eco-Tracker</span>
         </Link>
 
-        <div style={{ display: 'flex', gap: '1.5rem', alignItems: 'center' }}>
+        <div className="nav-menu" style={{ display: 'flex', gap: '1.5rem', alignItems: 'center' }}>
           <NavLink to="/" style={({ isActive }) => ({ ...navLinkStyle, color: isActive ? 'var(--accent-neon)' : 'var(--text-muted)' })}>
             <Home size={16} /> Home
           </NavLink>
@@ -52,9 +52,9 @@ export const Footer = () => {
       padding: '4rem 2rem 2rem', 
       marginTop: 'auto'
     }}>
-      <div style={{ maxWidth: '1400px', margin: '0 auto', display: 'grid', gridTemplateColumns: '2fr 1fr 1fr', gap: '4rem' }}>
+      <div className="grid-footer" style={{ maxWidth: '1400px', margin: '0 auto' }}>
         <div>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '1.5rem' }}>
+          <div className="footer-logo" style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '1.5rem' }}>
             <Activity size={24} color="var(--accent-neon)" />
             <span style={{ fontSize: '1.4rem', fontWeight: 800, color: 'white' }}>Eco-Tracker</span>
           </div>
@@ -82,7 +82,7 @@ export const Footer = () => {
         </div>
       </div>
       
-      <div style={{ maxWidth: '1400px', margin: '3rem auto 0', paddingTop: '2rem', borderTop: '1px solid rgba(255,255,255,0.03)', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+      <div className="footer-bottom-flex" style={{ maxWidth: '1400px', margin: '3rem auto 0', paddingTop: '2rem', borderTop: '1px solid rgba(255,255,255,0.03)', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
         <p style={{ color: '#4b5563', fontSize: '0.75rem', fontFamily: 'var(--font-mono)' }}>© 2026 ECO-TRACKER OS // v4.0.2</p>
         <div style={{ display: 'flex', gap: '1rem', fontSize: '0.75rem', color: '#4b5563', fontFamily: 'var(--font-mono)' }}>
           <span>LATENCY: 12ms</span>

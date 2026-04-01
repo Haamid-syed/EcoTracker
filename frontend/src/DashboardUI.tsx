@@ -107,21 +107,14 @@ export function DashboardUI() {
         variants={containerVariants}
         initial="hidden"
         animate="show"
-        style={{ 
-          display: 'grid', 
-          gridTemplateColumns: 'repeat(12, 1fr)', 
-          gridAutoRows: 'minmax(180px, auto)',
-          gap: '1.5rem', 
-          maxWidth: '1400px', 
-          margin: '0 auto' 
-        }}
+        className="grid-dashboard"
       >
 
         {/* 1. CARBON FOOTPRINT (Left Top) */}
-        <motion.div variants={itemVariants} {...hoverProps} style={{ ...cardStyle, gridColumn: 'span 4', gridRow: 'span 2' }}>
+        <motion.div variants={itemVariants} {...hoverProps} className="col-span-4 row-span-2" style={{ ...cardStyle }}>
           <SmallLabel>CARBON FOOTPRINT</SmallLabel>
           <div style={{ display: 'flex', alignItems: 'baseline', gap: '8px', margin: '20px 0' }}>
-            <h2 style={{ fontSize: '5.5rem', margin: 0, lineHeight: 1, fontWeight: 800, letterSpacing: '-0.03em' }}>
+            <h2 className="metric-large">
               <AnimatedNumber value={data.carbon_per_hour} fractionDigits={1} />
             </h2>
             <span style={{ fontSize: '1.2rem', color: 'var(--text-muted)', fontWeight: 600 }}>gCO₂/hr</span>
@@ -133,10 +126,10 @@ export function DashboardUI() {
         </motion.div>
 
         {/* 2. YEARLY PROJECTION (Middle Top) */}
-        <motion.div variants={itemVariants} {...hoverProps} style={{ ...cardStyle, gridColumn: 'span 4', gridRow: 'span 2' }}>
+        <motion.div variants={itemVariants} {...hoverProps} className="col-span-4 row-span-2" style={{ ...cardStyle }}>
           <SmallLabel>YEARLY PROJECTION</SmallLabel>
           <div style={{ display: 'flex', alignItems: 'baseline', gap: '8px', margin: '20px 0' }}>
-            <h2 style={{ fontSize: '5.5rem', margin: 0, lineHeight: 1, fontWeight: 800, letterSpacing: '-0.03em' }}>
+            <h2 className="metric-large">
               <AnimatedNumber value={data.current_yearly?.trees_equivalent || 0.8} />
             </h2>
             <span style={{ fontSize: '1.2rem', color: 'var(--text-muted)', fontWeight: 600 }}>Trees</span>
@@ -160,7 +153,7 @@ export function DashboardUI() {
         </motion.div>
 
         {/* 3. CPU LOAD (Right Top Left) */}
-        <motion.div variants={itemVariants} {...hoverProps} style={{ ...cardStyle, gridColumn: 'span 2' }}>
+        <motion.div variants={itemVariants} {...hoverProps} className="col-span-2" style={{ ...cardStyle }}>
           <SmallLabel>CPU LOAD</SmallLabel>
           <div style={{ fontSize: '2.2rem', fontWeight: 800, margin: '12px 0 8px' }}>{data.cpu.total.toFixed(1)} <span style={{ fontSize: '1rem', color: 'var(--text-muted)' }}>%</span></div>
           <MetricBar value={data.cpu.total} height="5px" />
@@ -168,7 +161,7 @@ export function DashboardUI() {
         </motion.div>
 
         {/* 4. MEMORY (Right Top Right) */}
-        <motion.div variants={itemVariants} {...hoverProps} style={{ ...cardStyle, gridColumn: 'span 2' }}>
+        <motion.div variants={itemVariants} {...hoverProps} className="col-span-2" style={{ ...cardStyle }}>
           <SmallLabel>MEMORY</SmallLabel>
           <div style={{ fontSize: '2.2rem', fontWeight: 800, margin: '12px 0 8px' }}>{data.memory.used.toFixed(1)} <span style={{ fontSize: '1rem', color: 'var(--text-muted)' }}>GB</span></div>
           <MetricBar value={data.memory.percent} height="5px" />
@@ -176,7 +169,7 @@ export function DashboardUI() {
         </motion.div>
 
         {/* 6. GPU UTILIZATION (Right Middle Left) */}
-        <motion.div variants={itemVariants} {...hoverProps} style={{ ...cardStyle, gridColumn: 'span 2' }}>
+        <motion.div variants={itemVariants} {...hoverProps} className="col-span-2" style={{ ...cardStyle }}>
           <SmallLabel>GPU UTILIZATION</SmallLabel>
           <div style={{ fontSize: '2.2rem', fontWeight: 800, margin: '12px 0 8px' }}>{data.gpu.usage.toFixed(0)} <span style={{ fontSize: '1rem', color: 'var(--text-muted)' }}>%</span></div>
           <MetricBar value={data.gpu.usage} height="5px" />
@@ -184,7 +177,7 @@ export function DashboardUI() {
         </motion.div>
 
         {/* 7. BATTERY HEALTH (Right Middle Right) */}
-        <motion.div variants={itemVariants} {...hoverProps} style={{ ...cardStyle, gridColumn: 'span 2' }}>
+        <motion.div variants={itemVariants} {...hoverProps} className="col-span-2" style={{ ...cardStyle }}>
           <SmallLabel>BATTERY HEALTH</SmallLabel>
           <div style={{ fontSize: '2.2rem', fontWeight: 800, margin: '12px 0 8px' }}>{data.battery.percent} <span style={{ fontSize: '1rem', color: 'var(--text-muted)' }}>%</span></div>
           <MetricBar value={data.battery.percent} height="5px" />
@@ -192,7 +185,7 @@ export function DashboardUI() {
         </motion.div>
 
         {/* 5. INTELLIGENT OPTIMIZATION (Bottom Left & Middle) */}
-        <motion.div variants={itemVariants} {...hoverProps} style={{ ...cardStyle, gridColumn: 'span 8', gridRow: 'span 2' }}>
+        <motion.div variants={itemVariants} {...hoverProps} className="col-span-8 row-span-2" style={{ ...cardStyle }}>
           <SmallLabel>INTELLIGENT OPTIMIZATION</SmallLabel>
           <h3 style={{ fontSize: '1.4rem', fontWeight: 800, margin: '16px 0 28px', letterSpacing: '-0.01em' }}>Resource Hog Detection</h3>
 
@@ -204,9 +197,9 @@ export function DashboardUI() {
         </motion.div>
 
         {/* 8. POWER DRAW ANALYSIS (Bottom Right) */}
-        <motion.div variants={itemVariants} {...hoverProps} style={{ ...cardStyle, gridColumn: 'span 4', gridRow: 'span 2' }}>
+        <motion.div variants={itemVariants} {...hoverProps} className="col-span-4 row-span-2" style={{ ...cardStyle }}>
           <SmallLabel>POWER DRAW ANALYSIS</SmallLabel>
-          <div style={{ fontSize: '5rem', fontWeight: 800, margin: '20px 0 12px', letterSpacing: '-0.02em', display: 'flex', alignItems: 'baseline', gap: '12px' }}>
+          <div className="metric-large" style={{ display: 'flex', alignItems: 'baseline', gap: '12px', marginTop: '20px', marginBottom: '12px' }}>
             <AnimatedNumber value={data.power} /> <span style={{ fontSize: '1.2rem', color: 'var(--text-muted)', fontWeight: 600 }}>Watts</span>
           </div>
           <div style={{ fontSize: '0.85rem', color: 'var(--text-telemetry)', marginBottom: '28px', display: 'flex', alignItems: 'center', gap: '8px', fontWeight: 600 }}>
@@ -217,7 +210,7 @@ export function DashboardUI() {
           </div>
           <p style={{ fontSize: '0.85rem', color: 'var(--text-muted)', marginBottom: '36px', lineHeight: 1.6 }}>Current combined system wattage consumption.</p>
           
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '2rem' }}>
+          <div className="power-breakdown-grid" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '2rem' }}>
             <div>
               <div style={breakdownLabel}>Display</div>
               <MetricBar value={(data.power_breakdown.screen / data.power) * 100} height="4px" />
