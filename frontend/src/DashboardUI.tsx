@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { Activity, Signal, HardDrive } from 'lucide-react';
+import { Signal, HardDrive } from 'lucide-react';
+import { AnimatedActivity } from './components/AnimatedActivity';
 import { WavyLineChart, MetricBar, SmallLabel } from './components/Visuals';
 import { ProcessTable } from './components/ProcessTable';
 import { InsightsPanel } from './components/InsightsPanel';
@@ -132,7 +133,7 @@ export function DashboardUI() {
 
   if (!data) return (
     <div style={{ minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', backgroundColor: '#050706' }}>
-      <Activity className="glow-animation" size={48} color="var(--accent-neon)" />
+      <AnimatedActivity size={48} color="var(--accent-neon)" />
     </div>
   );
 

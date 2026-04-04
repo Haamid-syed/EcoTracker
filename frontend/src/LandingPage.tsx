@@ -1,6 +1,7 @@
 import { useEffect, useRef } from 'react';
 import { motion } from 'framer-motion';
-import { Activity, Box, Layers, ArrowUp, ArrowRight } from 'lucide-react';
+import { Box, Layers, ArrowUp, ArrowRight } from 'lucide-react';
+import { AnimatedActivity } from './components/AnimatedActivity';
 import './index.css';
 
 const DNABackground = () => {
@@ -193,7 +194,7 @@ export const LandingPage = () => {
                             e.currentTarget.style.boxShadow = '0 10px 30px rgba(46, 204, 113, 0.4), 0 0 20px rgba(46, 204, 113, 0.2)';
                         }}
                     >
-                        Dashboard <Activity size={20} />
+                        Dashboard <AnimatedActivity size={20} />
                     </button>
 
                     <button
@@ -279,7 +280,7 @@ function ArchitecturalFeatures() {
                         style={{ flex: 1, background: 'rgba(16, 32, 27, 0.4)', padding: '2.5rem', display: 'flex', flexDirection: 'column' }}
                     >
                         <div style={{ background: 'rgba(52, 211, 153, 0.1)', width: '48px', height: '48px', borderRadius: '12px', display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: '1.5rem', border: '1px solid rgba(52, 211, 153, 0.2)' }}>
-                            <Activity size={24} color="var(--accent-neon)" />
+                            <AnimatedActivity size={24} color="var(--accent-neon)" />
                         </div>
                         <h3 style={{ fontSize: '1.5rem', fontWeight: 700, margin: '0 0 1rem 0', color: 'white', letterSpacing: '0.02em', textTransform: 'uppercase' }}>REAL-TIME TELEMETRY</h3>
                         <p style={{ color: 'var(--text-muted)', lineHeight: '1.6', fontSize: '1.05rem', margin: 0, maxWidth: '85%' }}>
