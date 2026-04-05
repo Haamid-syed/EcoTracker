@@ -82,48 +82,64 @@ const AnimatedNumber = ({ value, fractionDigits = 1 }: { value: number; fraction
 export function DashboardUI() {
   const [data, setData] = useState<MetricsData | null>(null);
   const [isMockData, setIsMockData] = useState(false);
+  const [connectionMode, setConnectionMode] = useState<'cloud' | 'local' | 'mock'>('mock');
 
   useEffect(() => {
-    const fetchMetrics = () => {
-      fetch("/api/metrics")
-        .then(r => r.json())
-        .then(json => {
+    const fetchMetrics = async () => {
+      // 1. Try Local Agent First (Directly on user's machine)
+      try {
+        const localResponse = await fetch("http://localhost:8000/api/metrics", { 
+          signal: AbortSignal.timeout(1000) 
+        });
+        if (localResponse.ok) {
+          const json = await localResponse.json();
           setData(json);
           setIsMockData(false);
-        })
-        .catch(() => {
-          setIsMockData(true);
-          // Fallback mock data for development
-          setData({
-            cpu: { total: 10.9, frequency: 5.2, per_core: [8, 12, 6, 15] },
-            memory: { percent: 78, used: 12.4, total: 16 },
-            gpu: { available: true, usage: 3 },
-            battery: { available: true, percent: 94, plugged: false },
-            disk: { total: 500, used: 280, free: 220, percent: 56 },
-            power: 42.8,
-            carbon_per_hour: 4.4,
-            power_breakdown: { cpu: 12, gpu: 3, ram: 5, screen: 8, idle: 15, total: 43 },
-            current_yearly: { kwh: 325, carbon_kg: 154, trees_equivalent: 7.3 },
-            optimized_power: 28.2,
-            optimized_carbon_per_hour: 2.8,
-            total_power_savings: 14.6,
-            optimized_yearly: { kwh: 214, carbon_kg: 102, trees_equivalent: 4.8 },
-            top_processes: [
-              { pid: 1234, name: 'Google Chrome', cpu: 18.2, memory: 12.5, memory_mb: 2048, category: 'browsers', is_idle: false, idle_duration: 0, cpu_sparkline: [15, 18, 12, 20, 16, 18], mem_sparkline: [11, 12, 12, 13, 12, 12.5], avg_cpu: 16.5, avg_mem: 12.1, status: 'running', threads: 42 },
-              { pid: 5678, name: 'Spotify', cpu: 4.3, memory: 6.2, memory_mb: 1016, category: 'media', is_idle: false, idle_duration: 0, cpu_sparkline: [5, 4, 3, 4, 5, 4.3], mem_sparkline: [6, 6, 6.1, 6.2, 6, 6.2], avg_cpu: 4.2, avg_mem: 6.1, status: 'running', threads: 18 },
-              { pid: 9012, name: 'Code Helper', cpu: 8.1, memory: 5.8, memory_mb: 950, category: 'development', is_idle: false, idle_duration: 0, cpu_sparkline: [6, 7, 8, 9, 8, 8.1], mem_sparkline: [5.5, 5.6, 5.7, 5.8, 5.8, 5.8], avg_cpu: 7.7, avg_mem: 5.7, status: 'running', threads: 24 },
-              { pid: 3456, name: 'Discord', cpu: 2.1, memory: 3.8, memory_mb: 622, category: 'communication', is_idle: false, idle_duration: 0, cpu_sparkline: [2, 2, 2, 3, 2, 2.1], mem_sparkline: [3.5, 3.6, 3.7, 3.8, 3.8, 3.8], avg_cpu: 2.2, avg_mem: 3.7, status: 'running', threads: 14 },
-              { pid: 7890, name: 'node', cpu: 3.5, memory: 2.1, memory_mb: 344, category: 'development', is_idle: false, idle_duration: 0, cpu_sparkline: [3, 4, 3, 3, 4, 3.5], mem_sparkline: [2, 2, 2.1, 2.1, 2.1, 2.1], avg_cpu: 3.4, avg_mem: 2.1, status: 'running', threads: 8 },
-            ],
-            suggestions: [],
-            idle_summary: {
-              count: 0,
-              total_memory_percent: 0,
-              names: [],
-            },
-            history: { cpu: [10, 12, 11, 10, 9], memory: [76, 77, 78, 78, 78], power: [40, 42, 43, 42, 42.8], carbon: [4, 4.2, 4.3, 4.2, 4.4] },
-          });
+          setConnectionMode('local');
+          return;
+        }
+      } catch (e) {
+        // Local agent not reachable
+      }
+
+      // 2. Try Cloud Agent (Vercel Proxy)
+      try {
+        const cloudResponse = await fetch("/api/metrics");
+        if (cloudResponse.ok) {
+          const json = await cloudResponse.json();
+          setData(json);
+          setIsMockData(false);
+          setConnectionMode('cloud');
+        } else {
+          throw new Error('Cloud unreachable');
+        }
+      } catch (e) {
+        // 3. Fallback to Mock Data
+        setIsMockData(true);
+        setConnectionMode('mock');
+        setData({
+          cpu: { total: 10.9, frequency: 5.2, per_core: [8, 12, 6, 15] },
+          memory: { percent: 78, used: 12.4, total: 16 },
+          gpu: { available: true, usage: 3 },
+          battery: { available: true, percent: 94, plugged: false },
+          disk: { total: 500, used: 280, free: 220, percent: 56 },
+          power: 42.8,
+          carbon_per_hour: 4.4,
+          power_breakdown: { cpu: 12, gpu: 3, ram: 5, screen: 8, idle: 15, total: 43 },
+          current_yearly: { kwh: 325, carbon_kg: 154, trees_equivalent: 7.3 },
+          optimized_power: 28.2,
+          optimized_carbon_per_hour: 2.8,
+          total_power_savings: 14.6,
+          optimized_yearly: { kwh: 214, carbon_kg: 102, trees_equivalent: 4.8 },
+          top_processes: [
+            { pid: 1234, name: 'Google Chrome', cpu: 18.2, memory: 12.5, memory_mb: 2048, category: 'browsers', is_idle: false, idle_duration: 0, cpu_sparkline: [15, 18, 12, 20, 16, 18], mem_sparkline: [11, 12, 12, 13, 12, 12.5], avg_cpu: 16.5, avg_mem: 12.1, status: 'running', threads: 42 },
+            { pid: 5678, name: 'Spotify', cpu: 4.3, memory: 6.2, memory_mb: 1016, category: 'media', is_idle: false, idle_duration: 0, cpu_sparkline: [5, 4, 3, 4, 5, 4.3], mem_sparkline: [6, 6, 6.1, 6.2, 6, 6.2], avg_cpu: 4.2, avg_mem: 6.1, status: 'running', threads: 18 },
+          ],
+          suggestions: [],
+          idle_summary: { count: 0, total_memory_percent: 0, names: [] },
+          history: { cpu: [10, 12], memory: [76, 77], power: [40, 42], carbon: [4, 4.2] },
         });
+      }
     };
 
     fetchMetrics();
@@ -179,11 +195,14 @@ export function DashboardUI() {
     <div style={{ minHeight: 'calc(100vh - 64px)', padding: '2.5rem 1.5rem', backgroundColor: 'var(--bg-primary)', color: 'white', overflowX: 'hidden' }}>
       
       {/* DASHBOARD HEADER WITH STATUS BADGE */}
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '2rem', padding: '0 0.5rem' }}>
+      <div className="flex justify-between items-center" style={{ marginBottom: '2.5rem' }}>
         <div>
-          <h1 style={{ fontSize: '1.25rem', fontWeight: 800, letterSpacing: '0.05em', color: 'white', margin: 0 }}>SYSTEM TELEMETRY</h1>
-          <div style={{ fontSize: '0.65rem', color: 'var(--text-muted)', fontFamily: 'var(--font-mono)', marginTop: '4px' }}>
-            ID: NODE_{Math.random().toString(16).substr(2, 6).toUpperCase()} // POLLING SECURE
+          <h2 style={{ fontSize: '2.5rem', margin: 0, letterSpacing: '-0.03em' }}>System <span className="text-neon">Telemetry</span></h2>
+          <div className="flex items-center gap-2" style={{ marginTop: '0.5rem' }}>
+            <div style={{ width: '8px', height: '8px', borderRadius: '50%', background: isMockData ? 'var(--warn-color)' : 'var(--accent-neon)' }} />
+            <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)', fontFamily: 'var(--font-mono)', textTransform: 'uppercase', letterSpacing: '0.1em' }}>
+              SOURCE: {connectionMode} ({isMockData ? 'MOCK' : 'LIVE'}) // {new Date().toLocaleTimeString()}
+            </span>
           </div>
         </div>
 

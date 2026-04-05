@@ -60,3 +60,4 @@ venv.bak/
 # Project specifics
 Eco_Tracker/venv/
 Eco_Tracker/venv2/
+.vercel
