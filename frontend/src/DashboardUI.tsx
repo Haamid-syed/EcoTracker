@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { Signal, HardDrive, AlertCircle } from 'lucide-react';
+import { Signal, HardDrive, AlertCircle, X } from 'lucide-react';
 import { AnimatedActivity } from './components/AnimatedActivity';
 import { WavyLineChart, MetricBar, SmallLabel } from './components/Visuals';
 import { ProcessTable } from './components/ProcessTable';
@@ -85,6 +85,7 @@ export function DashboardUI() {
   const [data, setData] = useState<MetricsData | null>(null);
   const [isMockData, setIsMockData] = useState(false);
   const [connectionMode, setConnectionMode] = useState<'cloud' | 'local' | 'mock'>('mock');
+  const [showAlert, setShowAlert] = useState(true);
 
   useEffect(() => {
     let cancelled = false;
@@ -234,7 +235,7 @@ export function DashboardUI() {
         </motion.div>
       </div>
 
-      {connectionMode !== 'local' && (
+      {showAlert && connectionMode !== 'local' && (
         <motion.div 
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -247,14 +248,42 @@ export function DashboardUI() {
             display: 'flex',
             alignItems: 'center',
             gap: '12px',
-            fontSize: '0.9rem'
+            fontSize: '0.9rem',
+            position: 'relative'
           }}
         >
-          <AlertCircle size={18} color="var(--warn-color)" />
-          <span style={{ color: 'var(--text-muted)', lineHeight: 1.5 }}>
+          <AlertCircle size={18} color="var(--warn-color)" style={{ flexShrink: 0 }} />
+          <span style={{ color: 'var(--text-muted)', lineHeight: 1.5, paddingRight: '32px' }}>
             <strong style={{ color: 'white', marginRight: '8px' }}>Demo Mode:</strong> 
-            Currently showing server-side or mock metrics. To monitor your own hardware in real-time, please clone and run the stack locally.
+            Currently showing server-only or mock metrics. To monitor your own hardware in real-time, please clone and run the stack locally.
           </span>
+          <button 
+            onClick={() => setShowAlert(false)}
+            style={{
+              position: 'absolute',
+              right: '16px',
+              top: '50%',
+              transform: 'translateY(-50%)',
+              background: 'transparent',
+              border: 'none',
+              color: 'var(--text-muted)',
+              cursor: 'pointer',
+              display: 'flex',
+              padding: '8px',
+              borderRadius: '50%',
+              transition: 'all 0.2s ease',
+            }}
+            onMouseOver={(e) => {
+              (e.currentTarget as HTMLButtonElement).style.background = 'rgba(255,255,255,0.05)';
+              (e.currentTarget as HTMLButtonElement).style.color = 'white';
+            }}
+            onMouseOut={(e) => {
+              (e.currentTarget as HTMLButtonElement).style.background = 'transparent';
+              (e.currentTarget as HTMLButtonElement).style.color = 'var(--text-muted)';
+            }}
+          >
+            <X size={16} />
+          </button>
         </motion.div>
       )}
 
