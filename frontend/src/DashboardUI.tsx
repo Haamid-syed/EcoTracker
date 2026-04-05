@@ -206,9 +206,19 @@ export function DashboardUI() {
               SOURCE: {connectionMode} ({isMockData ? 'MOCK' : 'LIVE'}) // {new Date().toLocaleTimeString()}
             </span>
           </div>
-        </div>
-
-
+        </div>        {connectionMode !== 'local' && (
+          <div className="glass-panel" style={{ 
+            padding: '12px 20px', 
+            borderRadius: '12px', 
+            fontSize: '0.85rem', 
+            border: '1px solid var(--warn-color)', 
+            background: 'rgba(233, 174, 73, 0.05)',
+            maxWidth: '500px'
+          }}>
+            <span style={{ color: 'var(--warn-color)', fontWeight: 800 }}>⚠️ {connectionMode === 'cloud' ? 'CLOUD INSTANCE' : 'MOCK DATA'}</span>: 
+            Viewing placeholder or server-only data. Run the project **locally** to monitor your own hardware.
+          </div>
+        )}
 
         <motion.div
            initial={{ opacity: 0, scale: 0.9 }}

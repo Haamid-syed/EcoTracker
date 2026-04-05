@@ -62,8 +62,14 @@ const itemVariants: any = {
               <h2 style={{ fontSize: '1.75rem', fontWeight: 800, color: 'white', margin: 0 }}>HOW TO CONNECT</h2>
             </div>
             
+            <div style={{ padding: '16px', background: 'rgba(231, 76, 60, 0.1)', borderRadius: '12px', border: '1px solid rgba(231, 76, 60, 0.2)', marginBottom: '32px' }}>
+              <p style={{ color: '#e74c3c', fontSize: '0.85rem', margin: 0, fontWeight: 600 }}>
+                ⚠️ DEPLOYMENT RESTRICTION: The version hosted on Vercel serves as a UI demo only. Browser security prevents public websites from accessing your local hardware. For real-time metrics, you must run the stack locally.
+              </p>
+            </div>
+
             <p style={{ color: 'var(--text-muted)', lineHeight: 1.8, marginBottom: '32px' }}>
-              The Eco-Tracker dashboard requires a local backend instance to poll your system hardware. Without this, it runs in <strong>Mock Mode</strong>.
+              The Eco-Tracker dashboard requires a local backend instance to poll your system hardware. If no local agent is detected, it falls back to <strong>Mock Mode</strong>.
             </p>
 
             <div style={{ background: '#0a0f0d', border: '1px solid rgba(255,255,255,0.05)', borderRadius: '16px', padding: '24px', position: 'relative' }}>
