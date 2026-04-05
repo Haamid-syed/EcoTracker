@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { Signal, HardDrive, AlertTriangle } from 'lucide-react';
+import { Signal, HardDrive, AlertCircle } from 'lucide-react';
 import { AnimatedActivity } from './components/AnimatedActivity';
 import { WavyLineChart, MetricBar, SmallLabel } from './components/Visuals';
 import { ProcessTable } from './components/ProcessTable';
@@ -79,7 +79,6 @@ const AnimatedNumber = ({ value, fractionDigits = 1 }: { value: number; fraction
   <span>{value.toFixed(fractionDigits)}</span>
 );
 
-
 const breakdownLabel = { fontSize: '0.6rem', color: 'var(--text-muted)', textTransform: 'uppercase' as const, letterSpacing: '0.05em', marginBottom: '8px' };
 
 export function DashboardUI() {
@@ -97,7 +96,6 @@ export function DashboardUI() {
       const isLocalhost = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
 
       try {
-        // Always hit /api/metrics on the current origin — works locally and on Vercel
         const response = await fetch("/api/metrics");
         if (cancelled) return;
 
@@ -158,21 +156,21 @@ export function DashboardUI() {
     </div>
   );
 
-  const cardStyle = { 
-    background: 'var(--bg-card)', 
-    borderRadius: '24px', 
-    border: '1px solid var(--border-glass)', 
-    padding: '24px', 
-    display: 'flex', 
-    flexDirection: 'column' as const, 
+  const cardStyle = {
+    background: 'var(--bg-card)',
+    borderRadius: '24px',
+    border: '1px solid var(--border-glass)',
+    padding: '24px',
+    display: 'flex',
+    flexDirection: 'column' as const,
     position: 'relative' as const,
     boxShadow: '0 4px 20px rgba(0,0,0,0.5)',
     transition: 'border-color 0.3s ease, box-shadow 0.3s ease'
   };
 
   const hoverProps: any = {
-    whileHover: { 
-      scale: 1.015, 
+    whileHover: {
+      scale: 1.015,
       borderColor: 'rgba(46, 204, 113, 0.4)',
       boxShadow: '0 10px 40px rgba(0,0,0,0.7), 0 0 20px rgba(46, 204, 113, 0.1)'
     },
@@ -198,9 +196,9 @@ export function DashboardUI() {
 
   return (
     <div style={{ minHeight: 'calc(100vh - 64px)', padding: '2.5rem 1.5rem', backgroundColor: 'var(--bg-primary)', color: 'white', overflowX: 'hidden' }}>
-      
-      {/* DASHBOARD HEADER WITH STATUS BADGE */}
-      <div className="flex justify-between items-center" style={{ marginBottom: '2.5rem' }}>
+
+      {/* DASHBOARD HEADER */}
+      <div className="flex justify-between items-center" style={{ marginBottom: '2rem' }}>
         <div>
           <h2 style={{ fontSize: '2.5rem', margin: 0, letterSpacing: '-0.03em' }}>System <span className="text-neon">Telemetry</span></h2>
           <div className="flex items-center gap-2" style={{ marginTop: '0.5rem' }}>
@@ -210,74 +208,65 @@ export function DashboardUI() {
             </span>
           </div>
         </div>
-        {connectionMode !== 'local' && (
-          <div className="glass-panel flex items-center gap-3" style={{ 
-            padding: '10px 18px', 
-            borderRadius: '100px', 
-            fontSize: '0.8rem', 
-            border: '1px solid rgba(233, 174, 73, 0.3)', 
-            background: 'rgba(233, 174, 73, 0.03)',
-            color: 'var(--text-muted)'
-          }}>
-            <AlertTriangle size={14} color="var(--warn-color)" />
-            <span>
-              <strong style={{ color: 'var(--warn-color)', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
-                {connectionMode === 'cloud' ? 'Demo Mode' : 'Mock Data'}
-              </strong>
-              <span style={{ opacity: 0.7, marginLeft: '8px' }}>
-                Run locally for real-time hardware telemetry.
-              </span>
-            </span>
-          </div>
-        )}
-
+        
         <motion.div
-           initial={{ opacity: 0, scale: 0.9 }}
-           animate={{ opacity: 1, scale: 1 }}
-           style={{
-             display: 'flex',
-             alignItems: 'center',
-             gap: '10px',
-             padding: '8px 16px',
-             borderRadius: '30px',
-             background: 'rgba(0,0,0,0.3)',
-             border: isMockData ? '1px solid rgba(251, 191, 36, 0.3)' : '1px solid rgba(46, 204, 113, 0.3)',
-             boxShadow: isMockData ? '0 0 15px rgba(251, 191, 36, 0.05)' : '0 0 15px rgba(46, 204, 113, 0.05)',
-           }}
+          initial={{ opacity: 0, scale: 0.9 }}
+          animate={{ opacity: 1, scale: 1 }}
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+            gap: '10px',
+            padding: '8px 16px',
+            borderRadius: '30px',
+            background: 'rgba(0,0,0,0.3)',
+            border: isMockData ? '1px solid rgba(251, 191, 36, 0.3)' : '1px solid rgba(46, 204, 113, 0.3)',
+            boxShadow: isMockData ? '0 0 15px rgba(251, 191, 36, 0.05)' : '0 0 15px rgba(46, 204, 113, 0.05)',
+          }}
         >
           <motion.div
             animate={{ opacity: [1, 0.3, 1] }}
-            transition={{ duration: 1.5, repeat: Infinity }}
-            style={{
-              width: '8px',
-              height: '8px',
-              borderRadius: '50%',
-              background: isMockData ? '#fbbf24' : 'var(--accent-neon)',
-              boxShadow: `0 0 10px ${isMockData ? '#fbbf24' : 'var(--accent-neon)'}`,
-            }}
+            transition={{ duration: 2, repeat: Infinity, ease: 'easeInOut' }}
+            style={{ width: '10px', height: '10px', borderRadius: '50%', background: isMockData ? 'var(--warn-color)' : 'var(--accent-neon)' }}
           />
-          <span style={{
-            fontSize: '0.65rem',
-            fontWeight: 800,
-            color: isMockData ? '#fbbf24' : 'var(--accent-neon)',
-            fontFamily: 'var(--font-mono)',
-            letterSpacing: '0.15em',
-            textTransform: 'uppercase'
-          }}>
-            {isMockData ? 'MOCK MODE' : 'LIVE'}
+          <span style={{ fontSize: '0.8rem', fontWeight: 800, fontFamily: 'var(--font-mono)', textTransform: 'uppercase', letterSpacing: '0.05em', color: isMockData ? '#fbbf24' : 'var(--accent-neon)' }}>
+            {isMockData ? 'MOCK SYSTEM' : 'LIVE TELEMETRY'}
           </span>
         </motion.div>
       </div>
-      
+
+      {connectionMode !== 'local' && (
+        <motion.div 
+          initial={{ opacity: 0, y: -20 }}
+          animate={{ opacity: 1, y: 0 }}
+          style={{ 
+            background: 'rgba(233, 174, 73, 0.03)',
+            border: '1px solid rgba(233, 174, 73, 0.1)',
+            padding: '14px 24px',
+            borderRadius: '16px',
+            marginBottom: '2.5rem',
+            display: 'flex',
+            alignItems: 'center',
+            gap: '12px',
+            fontSize: '0.9rem'
+          }}
+        >
+          <AlertCircle size={18} color="var(--warn-color)" />
+          <span style={{ color: 'var(--text-muted)', lineHeight: 1.5 }}>
+            <strong style={{ color: 'white', marginRight: '8px' }}>Demo Mode:</strong> 
+            Currently showing server-side or mock metrics. To monitor your own hardware in real-time, please clone and run the stack locally.
+          </span>
+        </motion.div>
+      )}
+
       {/* DASHBOARD GRID */}
-      <motion.div 
+      <motion.div
         variants={containerVariants}
         initial="hidden"
         animate="show"
         className="grid-dashboard"
       >
 
-        {/* 1. CARBON FOOTPRINT (Left Top) */}
+        {/* 1. CARBON FOOTPRINT */}
         <motion.div variants={itemVariants} {...hoverProps} className="col-span-4 row-span-2" style={{ ...cardStyle }}>
           <SmallLabel>CARBON FOOTPRINT</SmallLabel>
           <div style={{ display: 'flex', alignItems: 'baseline', gap: '8px', margin: '20px 0' }}>
@@ -287,12 +276,12 @@ export function DashboardUI() {
             <span style={{ fontSize: '1.2rem', color: 'var(--text-muted)', fontWeight: 600 }}>gCO₂/hr</span>
           </div>
           <p style={{ fontSize: '0.85rem', color: 'var(--text-muted)', maxWidth: '300px', lineHeight: 1.6 }}>
-            Real-time hardware emission translation based on current {data.power.toFixed(0)}W draw.
+            Real-time emission translation based on current {data.power.toFixed(0)}W draw.
           </p>
           <WavyLineChart value={data.carbon_per_hour * 10} />
         </motion.div>
 
-        {/* 2. CARBON OPTIMIZATION (replaces Yearly Projection) */}
+        {/* 2. CARBON OPTIMIZATION */}
         <motion.div variants={itemVariants} {...hoverProps} className="col-span-4 row-span-2" style={{ ...cardStyle }}>
           <CarbonComparison
             currentPower={data.power}
@@ -341,7 +330,7 @@ export function DashboardUI() {
           </div>
         </motion.div>
 
-        {/* 7. INTELLIGENT OPTIMIZATION — Process Table (expanded) */}
+        {/* 7. INTELLIGENT OPTIMIZATION */}
         <motion.div variants={itemVariants} {...hoverProps} className="col-span-8 row-span-2" style={{ ...cardStyle }}>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
             <SmallLabel>INTELLIGENT OPTIMIZATION</SmallLabel>
@@ -379,7 +368,7 @@ export function DashboardUI() {
           <ProcessTable processes={data.top_processes || []} />
         </motion.div>
 
-        {/* 8. POWER DRAW + INSIGHTS (Right column) */}
+        {/* 8. POWER DRAW ANALYSIS */}
         <motion.div variants={itemVariants} {...hoverProps} className="col-span-4 row-span-2" style={{ ...cardStyle }}>
           <SmallLabel>POWER DRAW ANALYSIS</SmallLabel>
           <div className="metric-large" style={{ display: 'flex', alignItems: 'baseline', gap: '12px', marginTop: '20px', marginBottom: '12px' }}>
@@ -388,14 +377,14 @@ export function DashboardUI() {
           <div style={{ fontSize: '0.85rem', color: 'var(--text-telemetry)', marginBottom: '28px', display: 'flex', alignItems: 'center', gap: '8px', fontWeight: 600 }}>
             <motion.div animate={{ opacity: [1, 0.4, 1] }} transition={{ duration: 1.5, repeat: Infinity }}>
               <Signal size={16} />
-            </motion.div> 
+            </motion.div>
             {data.total_power_savings > 0
               ? `↓ ${data.total_power_savings.toFixed(0)}W savable`
               : '● Optimal'
             }
           </div>
           <p style={{ fontSize: '0.85rem', color: 'var(--text-muted)', marginBottom: '36px', lineHeight: 1.6 }}>Current combined system wattage consumption.</p>
-          
+
           <div className="power-breakdown-grid" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '2rem' }}>
             <div>
               <div style={breakdownLabel}>Display</div>
@@ -441,7 +430,7 @@ export function DashboardUI() {
           <InsightsPanel suggestions={data.suggestions || []} />
         </motion.div>
 
-        {/* 10. DISK USAGE (small panel) */}
+        {/* 10. DISK USAGE */}
         <motion.div variants={itemVariants} {...hoverProps} className="col-span-4" style={{ ...cardStyle }}>
           <SmallLabel>DISK USAGE</SmallLabel>
           <div style={{ display: 'flex', alignItems: 'center', gap: '16px', margin: '16px 0' }}>
@@ -467,5 +456,3 @@ export function DashboardUI() {
     </div>
   );
 }
-
-
