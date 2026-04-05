@@ -1,6 +1,6 @@
 import { motion } from 'framer-motion';
 
-export const AnimatedActivity = ({ size = 24, color = "currentColor" }: { size?: number, color?: string }) => (
+export const AnimatedActivity = ({ size = 24, color = "currentColor", strokeWidth = 2 }: { size?: number, color?: string, strokeWidth?: number }) => (
     <div style={{ display: 'inline-flex', alignItems: 'center', justifyContent: 'center', verticalAlign: 'middle' }}>
         <motion.svg
             width={size}
@@ -8,7 +8,7 @@ export const AnimatedActivity = ({ size = 24, color = "currentColor" }: { size?:
             viewBox="0 0 24 24"
             fill="none"
             stroke={color}
-            strokeWidth="2.5"
+            strokeWidth={strokeWidth}
             strokeLinecap="round"
             strokeLinejoin="round"
             style={{ filter: `drop-shadow(0 0 8px ${color === 'currentColor' ? 'rgba(52, 211, 153, 0.4)' : color})` }}
@@ -31,7 +31,7 @@ export const AnimatedActivity = ({ size = 24, color = "currentColor" }: { size?:
             <path
                 d="M2 12h4l3-9l6 18l3-9h4"
                 opacity="0.1"
-                strokeWidth="1.5"
+                strokeWidth="1"
             />
         </motion.svg>
     </div>

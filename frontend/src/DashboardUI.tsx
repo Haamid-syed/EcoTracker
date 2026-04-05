@@ -85,7 +85,7 @@ export function DashboardUI() {
 
   useEffect(() => {
     const fetchMetrics = () => {
-      fetch("http://localhost:8000/api/metrics")
+      fetch("/api/metrics")
         .then(r => r.json())
         .then(json => {
           setData(json);

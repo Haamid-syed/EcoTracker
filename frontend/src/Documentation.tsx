@@ -69,10 +69,10 @@ const itemVariants: any = {
             <div style={{ background: '#0a0f0d', border: '1px solid rgba(255,255,255,0.05)', borderRadius: '16px', padding: '24px', position: 'relative' }}>
               <div style={{ color: 'var(--accent-neon)', fontFamily: 'var(--font-mono)', fontSize: '0.8rem', marginBottom: '16px', opacity: 0.6 }}>SYSTEM INITIALIZATION:</div>
               <code style={{ display: 'block', color: 'white', fontFamily: 'var(--font-mono)', fontSize: '0.9rem', lineHeight: 2 }}>
-                # 1. Install dependencies<br />
-                <span style={{ color: 'var(--accent-neon)' }}>$</span> pip install -r requirements.txt<br /><br />
-                # 2. Boot the telemetry server<br />
-                <span style={{ color: 'var(--accent-neon)' }}>$</span> python3 app.py
+                # 1. Install all dependencies from root<br />
+                <span style={{ color: 'var(--accent-neon)' }}>$</span> npm run install:all<br /><br />
+                # 2. Boot the full telemetry stack<br />
+                <span style={{ color: 'var(--accent-neon)' }}>$</span> npm run dev
               </code>
             </div>
 

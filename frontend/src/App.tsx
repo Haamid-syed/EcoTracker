@@ -53,7 +53,7 @@ const PageTransitionLoader = () => {
             backdropFilter: 'blur(20px)'
           }}
         >
-          <AnimatedActivity size={64} color="var(--accent-neon)" />
+          <AnimatedActivity size={64} color="var(--accent-neon)" strokeWidth={1} />
           <motion.div
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}

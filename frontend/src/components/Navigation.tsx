@@ -1,6 +1,6 @@
 import { motion } from 'framer-motion';
 import { NavLink, Link } from 'react-router-dom';
-import { LayoutDashboard, Home, Activity, BookOpen } from 'lucide-react';
+import { LayoutDashboard, Home, BookOpen } from 'lucide-react';
 
 export const Navbar = () => {
   return (
@@ -19,8 +19,8 @@ export const Navbar = () => {
     >
       <div className="nav-wrapper">
         <Link to="/" style={{ textDecoration: 'none', display: 'flex', alignItems: 'center', gap: '10px' }}>
-          <div style={{ width: '32px', height: '32px', background: 'var(--accent-neon)', borderRadius: '8px', display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: '0 0 15px rgba(46,204,113,0.4)' }}>
-            <Activity size={18} color="black" />
+          <div style={{ width: '24px', height: '24px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+            <img src="/logo.svg" alt="Eco-Tracker Logo" style={{ width: '100%', height: '100%', objectFit: 'contain' }} />
           </div>
           <span style={{ fontSize: '1.2rem', fontWeight: 800, color: 'white', letterSpacing: '-0.02em' }}>Eco-Tracker</span>
         </Link>
@@ -58,7 +58,7 @@ export const Footer = () => {
       <div className="grid-footer" style={{ maxWidth: '1400px', margin: '0 auto' }}>
         <div>
           <div className="footer-logo" style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '1.5rem' }}>
-            <Activity size={24} color="var(--accent-neon)" />
+            <img src="/logo.svg" alt="Eco-Tracker Logo" style={{ width: '32px', height: '32px' }} />
             <span style={{ fontSize: '1.4rem', fontWeight: 800, color: 'white' }}>Eco-Tracker</span>
           </div>
           <p style={{ color: 'var(--text-muted)', fontSize: '0.9rem', maxWidth: '300px', lineHeight: 1.6 }}>
