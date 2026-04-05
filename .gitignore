@@ -41,8 +41,6 @@ build/
 *.sw?
 *.icloud
 
-*.md
-
 # Python artifacts
 __pycache__/
 *.py[cod]
