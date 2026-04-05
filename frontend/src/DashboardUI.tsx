@@ -86,32 +86,35 @@ export function DashboardUI() {
 
   useEffect(() => {
     const fetchMetrics = async () => {
-      // 1. Try Local Agent First (Directly on user's machine)
-      try {
-        const localResponse = await fetch("http://localhost:8000/api/metrics", { 
-          signal: AbortSignal.timeout(1000) 
-        });
-        if (localResponse.ok) {
-          const json = await localResponse.json();
-          setData(json);
-          setIsMockData(false);
-          setConnectionMode('local');
-          return;
+      const isLocalhost = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
+      
+      // 1. Try to bridge to Local Hardware first (works via PNA headers)
+      if (!isLocalhost) {
+        try {
+          const localResponse = await fetch("http://127.0.0.1:8000/api/metrics", { 
+            signal: AbortSignal.timeout(1000) 
+          });
+          if (localResponse.ok) {
+            const json = await localResponse.json();
+            setData(json);
+            setIsMockData(false);
+            setConnectionMode('local');
+            return;
+          }
+        } catch (e) {
+            // bridge failed, fallback to cloud
         }
-      } catch (e) {
-        // Local agent not reachable
       }
 
-      // 2. Try Cloud Agent (Vercel Proxy)
       try {
-        const cloudResponse = await fetch("/api/metrics");
-        if (cloudResponse.ok) {
-          const json = await cloudResponse.json();
+        const response = await fetch("/api/metrics");
+        if (response.ok) {
+          const json = await response.json();
           setData(json);
           setIsMockData(false);
-          setConnectionMode('cloud');
+          setConnectionMode(isLocalhost ? 'local' : 'cloud');
         } else {
-          throw new Error('Cloud unreachable');
+          throw new Error('API unreachable');
         }
       } catch (e) {
         // 3. Fallback to Mock Data
@@ -208,8 +211,8 @@ export function DashboardUI() {
 
         {connectionMode === 'cloud' && !isMockData && (
           <div className="glass-panel" style={{ padding: '12px 20px', borderRadius: '12px', fontSize: '0.85rem', border: '1px solid rgba(59, 130, 246, 0.3)', background: 'rgba(59, 130, 246, 0.05)' }}>
-            <span style={{ color: '#3b82f6', fontWeight: 800 }}>⚠️ MIXED CONTENT BLOCK</span>: 
-            To show <strong>Local Hardware</strong> instead of Cloud Metrics, allow <strong>"Insecure Content"</strong> in your browser settings for this site.
+            <span style={{ color: '#3b82f6', fontWeight: 800 }}>☁️ CLOUD DEPLOYMENT</span>: 
+            You are viewing Vercel's Server telemetry. Browsers block public websites from reading your private local hardware. To monitor your Mac, view this via HTTP localhost!
           </div>
         )}
 
