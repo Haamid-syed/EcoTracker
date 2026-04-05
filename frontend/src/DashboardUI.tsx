@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { Signal, HardDrive } from 'lucide-react';
+import { Signal, HardDrive, AlertTriangle } from 'lucide-react';
 import { AnimatedActivity } from './components/AnimatedActivity';
 import { WavyLineChart, MetricBar, SmallLabel } from './components/Visuals';
 import { ProcessTable } from './components/ProcessTable';
@@ -78,6 +78,9 @@ interface MetricsData {
 const AnimatedNumber = ({ value, fractionDigits = 1 }: { value: number; fractionDigits?: number }) => (
   <span>{value.toFixed(fractionDigits)}</span>
 );
+
+
+const breakdownLabel = { fontSize: '0.6rem', color: 'var(--text-muted)', textTransform: 'uppercase' as const, letterSpacing: '0.05em', marginBottom: '8px' };
 
 export function DashboardUI() {
   const [data, setData] = useState<MetricsData | null>(null);
@@ -206,17 +209,25 @@ export function DashboardUI() {
               SOURCE: {connectionMode} ({isMockData ? 'MOCK' : 'LIVE'}) // {new Date().toLocaleTimeString()}
             </span>
           </div>
-        </div>        {connectionMode !== 'local' && (
-          <div className="glass-panel" style={{ 
-            padding: '12px 20px', 
-            borderRadius: '12px', 
-            fontSize: '0.85rem', 
-            border: '1px solid var(--warn-color)', 
-            background: 'rgba(233, 174, 73, 0.05)',
-            maxWidth: '500px'
+        </div>
+        {connectionMode !== 'local' && (
+          <div className="glass-panel flex items-center gap-3" style={{ 
+            padding: '10px 18px', 
+            borderRadius: '100px', 
+            fontSize: '0.8rem', 
+            border: '1px solid rgba(233, 174, 73, 0.3)', 
+            background: 'rgba(233, 174, 73, 0.03)',
+            color: 'var(--text-muted)'
           }}>
-            <span style={{ color: 'var(--warn-color)', fontWeight: 800 }}>⚠️ {connectionMode === 'cloud' ? 'CLOUD INSTANCE' : 'MOCK DATA'}</span>: 
-            Viewing placeholder or server-only data. Run the project **locally** to monitor your own hardware.
+            <AlertTriangle size={14} color="var(--warn-color)" />
+            <span>
+              <strong style={{ color: 'var(--warn-color)', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+                {connectionMode === 'cloud' ? 'Demo Mode' : 'Mock Data'}
+              </strong>
+              <span style={{ opacity: 0.7, marginLeft: '8px' }}>
+                Run locally for real-time hardware telemetry.
+              </span>
+            </span>
           </div>
         )}
 
@@ -457,4 +468,4 @@ export function DashboardUI() {
   );
 }
 
-const breakdownLabel = { fontSize: '0.6rem', color: 'var(--text-muted)', textTransform: 'uppercase' as const, letterSpacing: '0.05em', marginBottom: '8px' };
+
