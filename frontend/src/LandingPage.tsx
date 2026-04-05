@@ -26,19 +26,21 @@ const DNABackground = () => {
         let time = 0;
 
         const render = () => {
+            if (!ctx || !canvas) return;
             ctx.clearRect(0, 0, canvas.width, canvas.height);
             ctx.save();
 
-            // Move to right side where DNA is in the screenshot
-            ctx.translate(canvas.width * 0.75, canvas.height * 0.5);
+            const isMobile = canvas.width < 768;
+            const xPos = isMobile ? canvas.width * 0.5 : canvas.width * 0.75;
+            ctx.translate(xPos, canvas.height * 0.5);
 
             time += 0.015;
 
             const items = [];
             const totalPoints = 60;
-            const spacing = 45; // vertical gap
-            const amplitude = 220; // width of helix
-            const frequency = 0.08; // tightness of twist
+            const spacing = 45; 
+            const amplitude = isMobile ? Math.min(canvas.width * 0.4, 220) : 220; 
+            const frequency = 0.08; 
 
             for (let i = -totalPoints / 2; i < totalPoints / 2; i++) {
                 const y = i * spacing;
@@ -286,13 +288,6 @@ function ArchitecturalFeatures() {
                         <p style={{ color: 'var(--text-muted)', lineHeight: '1.6', fontSize: '1.05rem', margin: 0, maxWidth: '85%' }}>
                             Monitors CPU load, memory pressure, GPU utilization, battery health, and disk usage with per-core breakdown and frequency tracking.
                         </p>
-                        <div style={{ marginTop: 'auto', display: 'flex', justifyContent: 'center', paddingTop: '3rem' }}>
-                            <motion.div
-                                animate={{ opacity: [1, 0, 1] }}
-                                transition={{ duration: 1, repeat: Infinity }}
-                                style={{ width: '4px', height: '20px', background: 'var(--accent-neon)', borderRadius: '2px', boxShadow: '0 0 10px var(--accent-neon)' }}
-                            />
-                        </div>
                     </motion.div>
 
                     {/* Carbon Footprint Calculation box */}
