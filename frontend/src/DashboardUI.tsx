@@ -85,39 +85,31 @@ export function DashboardUI() {
   const [connectionMode, setConnectionMode] = useState<'cloud' | 'local' | 'mock'>('mock');
 
   useEffect(() => {
+    let cancelled = false;
+    let timeoutId: ReturnType<typeof setTimeout>;
+
     const fetchMetrics = async () => {
+      if (cancelled) return;
+
       const isLocalhost = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
-      
-      // 1. Try to bridge to Local Hardware first (works via PNA headers)
-      if (!isLocalhost) {
-        try {
-          const localResponse = await fetch("http://localhost:8000/api/metrics", { 
-            signal: AbortSignal.timeout(1000) 
-          });
-          if (localResponse.ok) {
-            const json = await localResponse.json();
-            setData(json);
-            setIsMockData(false);
-            setConnectionMode('local');
-            return;
-          }
-        } catch (e) {
-            // bridge failed, fallback to cloud
-        }
-      }
 
       try {
+        // Always hit /api/metrics on the current origin — works locally and on Vercel
         const response = await fetch("/api/metrics");
+        if (cancelled) return;
+
         if (response.ok) {
           const json = await response.json();
-          setData(json);
-          setIsMockData(false);
-          setConnectionMode(isLocalhost ? 'local' : 'cloud');
+          if (!cancelled) {
+            setData(json);
+            setIsMockData(false);
+            setConnectionMode(isLocalhost ? 'local' : 'cloud');
+          }
         } else {
-          throw new Error('API unreachable');
+          throw new Error('API error');
         }
       } catch (e) {
-        // 3. Fallback to Mock Data
+        if (cancelled) return;
         setIsMockData(true);
         setConnectionMode('mock');
         setData({
@@ -143,11 +135,18 @@ export function DashboardUI() {
           history: { cpu: [10, 12], memory: [76, 77], power: [40, 42], carbon: [4, 4.2] },
         });
       }
+
+      if (!cancelled) {
+        timeoutId = setTimeout(fetchMetrics, 3000);
+      }
     };
 
     fetchMetrics();
-    const interval = setInterval(fetchMetrics, 2000);
-    return () => clearInterval(interval);
+
+    return () => {
+      cancelled = true;
+      clearTimeout(timeoutId);
+    };
   }, []);
 
   if (!data) return (
@@ -209,12 +208,7 @@ export function DashboardUI() {
           </div>
         </div>
 
-        {connectionMode === 'cloud' && !isMockData && (
-          <div className="glass-panel" style={{ padding: '12px 20px', borderRadius: '12px', fontSize: '0.85rem', border: '1px solid rgba(59, 130, 246, 0.3)', background: 'rgba(59, 130, 246, 0.05)' }}>
-            <span style={{ color: '#3b82f6', fontWeight: 800 }}>☁️ CLOUD DEPLOYMENT</span>: 
-            You are viewing Vercel's Server telemetry. Browsers block public websites from reading your private local hardware. To monitor your Mac, view this via HTTP localhost!
-          </div>
-        )}
+
 
         <motion.div
            initial={{ opacity: 0, scale: 0.9 }}
