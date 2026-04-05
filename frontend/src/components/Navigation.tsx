@@ -18,7 +18,11 @@ export const Navbar = () => {
       }}
     >
       <div className="nav-wrapper">
-        <Link to="/" style={{ textDecoration: 'none', display: 'flex', alignItems: 'center', gap: '10px' }}>
+        <Link 
+          to="/" 
+          onClick={() => window.scrollTo(0, 0)}
+          style={{ textDecoration: 'none', display: 'flex', alignItems: 'center', gap: '10px' }}
+        >
           <div style={{ width: '24px', height: '24px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
             <img src="/logo.svg" alt="Eco-Tracker Logo" style={{ width: '100%', height: '100%', objectFit: 'contain' }} />
           </div>
@@ -48,6 +52,8 @@ export const Navbar = () => {
 };
 
 export const Footer = () => {
+  const socialLinkStyle = { ...footerLinkStyle, display: 'flex', alignItems: 'center', gap: '8px' };
+  
   return (
     <footer style={{ 
       background: 'var(--bg-primary)', 
@@ -55,41 +61,47 @@ export const Footer = () => {
       padding: '4rem 2rem 2rem', 
       marginTop: 'auto'
     }}>
-      <div className="grid-footer" style={{ maxWidth: '1400px', margin: '0 auto' }}>
-        <div>
-          <div className="footer-logo" style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '1.5rem' }}>
+      <div className="grid-footer" style={{ maxWidth: '1400px', margin: '0 auto', display: 'flex', justifyContent: 'space-between', flexWrap: 'wrap', gap: '3rem' }}>
+        <div style={{ flex: '1 1 300px' }}>
+          <Link 
+            to="/" 
+            onClick={() => window.scrollTo(0, 0)}
+            className="footer-logo" 
+            style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '1.5rem', textDecoration: 'none' }}
+          >
             <img src="/logo.svg" alt="Eco-Tracker Logo" style={{ width: '32px', height: '32px' }} />
-            <span style={{ fontSize: '1.4rem', fontWeight: 800, color: 'white' }}>Eco-Tracker</span>
-          </div>
-          <p style={{ color: 'var(--text-muted)', fontSize: '0.9rem', maxWidth: '300px', lineHeight: 1.6 }}>
-            Real-time environmental telemetry and system hardware carbon impact tracking for the energy-conscious developer.
+            <span style={{ fontSize: '1.4rem', fontWeight: 800, color: 'white', letterSpacing: '-0.02em' }}>Eco-Tracker</span>
+          </Link>
+          <p style={{ color: 'var(--text-muted)', fontSize: '0.9rem', maxWidth: '350px', lineHeight: 1.6, marginBottom: '0.5rem' }}>
+            Next-generation environmental telemetry and system hardware carbon impact tracking for modern developers.
           </p>
         </div>
         
-        <div>
-          <h4 style={{ color: 'white', marginBottom: '1.5rem', fontSize: '0.9rem', textTransform: 'uppercase', letterSpacing: '0.1em' }}>Intelligence</h4>
-          <ul style={{ listStyle: 'none', padding: 0, margin: 0, display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
-            <li><Link to="/dashboard" style={footerLinkStyle}>Telemetry Hub</Link></li>
-            <li><Link to="/documentation" style={footerLinkStyle}>Documentation</Link></li>
-            <li><Link to="/" style={footerLinkStyle}>Carbon Methodology</Link></li>
-          </ul>
-        </div>
-        
-        <div>
-          <h4 style={{ color: 'white', marginBottom: '1.5rem', fontSize: '0.9rem', textTransform: 'uppercase', letterSpacing: '0.1em' }}>Platform</h4>
-          <ul style={{ listStyle: 'none', padding: 0, margin: 0, display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
-            <li><Link to="/" style={footerLinkStyle}>Privacy Console</Link></li>
-            <li><Link to="/" style={footerLinkStyle}>Term Status</Link></li>
-            <li><Link to="/" style={footerLinkStyle}>Security Root</Link></li>
-          </ul>
+        <div style={{ display: 'flex', gap: '4rem', flexWrap: 'wrap' }}>
+          <div>
+            <h4 style={{ color: 'white', marginBottom: '1.5rem', fontSize: '0.8rem', textTransform: 'uppercase', letterSpacing: '0.15em', opacity: 0.8 }}>Resources</h4>
+            <ul style={{ listStyle: 'none', padding: 0, margin: 0, display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+              <li><Link to="/dashboard" style={footerLinkStyle}>Dashboard</Link></li>
+              <li><Link to="/documentation" style={footerLinkStyle}>Documentation</Link></li>
+            </ul>
+          </div>
+          
+          <div>
+            <h4 style={{ color: 'white', marginBottom: '1.5rem', fontSize: '0.8rem', textTransform: 'uppercase', letterSpacing: '0.15em', opacity: 0.8 }}>Social</h4>
+            <ul style={{ listStyle: 'none', padding: 0, margin: 0, display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+              <li><a href="https://github.com/Haamid-syed/EcoTracker" target="_blank" rel="noopener noreferrer" style={socialLinkStyle}>GitHub</a></li>
+              <li><a href="https://twitter.com" target="_blank" rel="noopener noreferrer" style={socialLinkStyle}>Twitter</a></li>
+            </ul>
+          </div>
         </div>
       </div>
       
-      <div className="footer-bottom-flex" style={{ maxWidth: '1400px', margin: '3rem auto 0', paddingTop: '2rem', borderTop: '1px solid rgba(255,255,255,0.03)', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+      <div className="footer-bottom-flex" style={{ maxWidth: '1400px', margin: '4rem auto 0', paddingTop: '2rem', borderTop: '1px solid rgba(255,255,255,0.03)', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
         <p style={{ color: '#4b5563', fontSize: '0.75rem', fontFamily: 'var(--font-mono)' }}>© 2026 ECO-TRACKER OS // v4.0.2</p>
-        <div style={{ display: 'flex', gap: '1rem', fontSize: '0.75rem', color: '#4b5563', fontFamily: 'var(--font-mono)' }}>
+        <div style={{ display: 'flex', gap: '1.5rem', fontSize: '0.75rem', color: '#4b5563', fontFamily: 'var(--font-mono)' }}>
           <span>LATENCY: 12ms</span>
           <span>REGION: GLOBAL-1</span>
+          <span>STATUS: OPERATIONAL</span>
         </div>
       </div>
     </footer>
