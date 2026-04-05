@@ -91,7 +91,7 @@ export function DashboardUI() {
       // 1. Try to bridge to Local Hardware first (works via PNA headers)
       if (!isLocalhost) {
         try {
-          const localResponse = await fetch("http://127.0.0.1:8000/api/metrics", { 
+          const localResponse = await fetch("http://localhost:8000/api/metrics", { 
             signal: AbortSignal.timeout(1000) 
           });
           if (localResponse.ok) {
