@@ -1,5 +1,5 @@
 import { motion } from 'framer-motion';
-import { Terminal, Cpu, Zap, Signal, Info, BookOpen, Link } from 'lucide-react';
+import { Terminal, Cpu, Zap, Signal, Info, Link } from 'lucide-react';
 
 const cardStyle = {
   background: 'var(--bg-card)',
