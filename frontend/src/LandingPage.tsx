@@ -263,7 +263,7 @@ function ArchitecturalFeatures() {
                     </h2>
                 </div>
                 <p style={{ maxWidth: '400px', color: 'var(--text-muted)', fontSize: '1.05rem', lineHeight: '1.6' }}>
-                    Polling system hardware via psutil to calculate real-time power draw and carbon emissions from your laptop's actual resource usage.
+                    Polling system hardware via psutil to calculate real-time power draw and carbon emissions from your laptop's actual resource usage. Carbonly provides the data-driven intelligence to lower your footprint.
                 </p>
             </motion.div>
 

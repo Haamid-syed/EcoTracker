@@ -37,7 +37,7 @@ export default function Documentation() {
             OPERATING <span style={{ color: 'var(--accent-neon)' }}>MANUAL</span>
           </h1>
           <p style={{ fontSize: '1.2rem', color: 'var(--text-muted)', maxWidth: '600px', margin: '0 auto', lineHeight: 1.6 }}>
-            Understanding the underlying architecture of Eco-Tracker's carbon telemetry and hardware polling loop.
+            Understanding the underlying architecture of Carbonly's carbon telemetry and hardware polling loop.
           </p>
         </motion.div>
 
@@ -56,7 +56,7 @@ export default function Documentation() {
             </div>
 
             <p style={{ color: 'var(--text-muted)', lineHeight: 1.8, marginBottom: '32px' }}>
-              The Eco-Tracker dashboard requires a local backend instance to poll your system hardware. If no local agent is detected, it falls back to <strong>Mock Mode</strong>.
+              The Carbonly dashboard requires a local backend instance to poll your system hardware. If no local agent is detected, it falls back to <strong>Mock Mode</strong>.
             </p>
 
             <div style={{ background: '#0a0f0d', border: '1px solid rgba(255,255,255,0.05)', borderRadius: '16px', padding: '24px', position: 'relative' }}>

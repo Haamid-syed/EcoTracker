@@ -24,9 +24,9 @@ export const Navbar = () => {
           style={{ textDecoration: 'none', display: 'flex', alignItems: 'center', gap: '10px' }}
         >
           <div style={{ width: '24px', height: '24px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-            <img src="/logo.svg" alt="Eco-Tracker Logo" style={{ width: '100%', height: '100%', objectFit: 'contain' }} />
+            <img src="/logo.svg" alt="Carbonly Logo" style={{ width: '100%', height: '100%', objectFit: 'contain' }} />
           </div>
-          <span style={{ fontSize: '1.2rem', fontWeight: 800, color: 'white', letterSpacing: '-0.02em' }}>Eco-Tracker</span>
+          <span style={{ fontSize: '1.2rem', fontWeight: 800, color: 'white', letterSpacing: '-0.02em' }}>Carbonly</span>
         </Link>
 
         <div className="nav-menu" style={{ display: 'flex', gap: '1.5rem', alignItems: 'center' }}>
@@ -70,8 +70,8 @@ export const Footer = () => {
             className="footer-logo"
             style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '1.5rem', textDecoration: 'none' }}
           >
-            <img src="/logo.svg" alt="Eco-Tracker Logo" style={{ width: '32px', height: '32px' }} />
-            <span style={{ fontSize: '1.4rem', fontWeight: 800, color: 'white', letterSpacing: '-0.02em' }}>Eco-Tracker</span>
+            <img src="/logo.svg" alt="Carbonly Logo" style={{ width: '32px', height: '32px' }} />
+            <span style={{ fontSize: '1.4rem', fontWeight: 800, color: 'white', letterSpacing: '-0.02em' }}>Carbonly</span>
           </Link>
           <p style={{ color: 'var(--text-muted)', fontSize: '0.9rem', maxWidth: '350px', lineHeight: 1.6, marginBottom: '0.5rem' }}>
             Next-generation environmental telemetry and system hardware carbon impact tracking for modern developers.
@@ -100,7 +100,7 @@ export const Footer = () => {
       </div>
 
       <div className="footer-bottom-flex" style={{ maxWidth: '1400px', margin: '4rem auto 0', paddingTop: '2rem', borderTop: '1px solid rgba(255,255,255,0.03)', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-        <p style={{ color: '#4b5563', fontSize: '0.75rem', fontFamily: 'var(--font-mono)' }}>© 2026 ECO-TRACKER OS</p>
+        <p style={{ color: '#4b5563', fontSize: '0.75rem', fontFamily: 'var(--font-mono)' }}>© 2026 CARBONLY OS</p>
         <div style={{ display: 'flex', gap: '1.5rem', fontSize: '0.75rem', color: '#4b5563', fontFamily: 'var(--font-mono)' }}>
           <span>LATENCY: 12ms</span>
           <span>REGION: GLOBAL-1</span>

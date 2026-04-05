@@ -58,6 +58,7 @@ env.bak/
 venv.bak/
 
 # Project specifics
-Eco_Tracker/venv/
-Eco_Tracker/venv2/
 .vercel
+CARBONLY_CONTEXT.md
+context_handover.md
+CONTEXT_HANDOVER.md
