@@ -199,12 +199,19 @@ export function DashboardUI() {
         <div>
           <h2 style={{ fontSize: '2.5rem', margin: 0, letterSpacing: '-0.03em' }}>System <span className="text-neon">Telemetry</span></h2>
           <div className="flex items-center gap-2" style={{ marginTop: '0.5rem' }}>
-            <div style={{ width: '8px', height: '8px', borderRadius: '50%', background: isMockData ? 'var(--warn-color)' : 'var(--accent-neon)' }} />
+            <div style={{ width: '8px', height: '8px', borderRadius: '50%', background: isMockData ? 'var(--warn-color)' : (connectionMode === 'local' ? 'var(--accent-neon)' : '#3b82f6') }} />
             <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)', fontFamily: 'var(--font-mono)', textTransform: 'uppercase', letterSpacing: '0.1em' }}>
               SOURCE: {connectionMode} ({isMockData ? 'MOCK' : 'LIVE'}) // {new Date().toLocaleTimeString()}
             </span>
           </div>
         </div>
+
+        {connectionMode === 'cloud' && !isMockData && (
+          <div className="glass-panel" style={{ padding: '12px 20px', borderRadius: '12px', fontSize: '0.85rem', border: '1px solid rgba(59, 130, 246, 0.3)', background: 'rgba(59, 130, 246, 0.05)' }}>
+            <span style={{ color: '#3b82f6', fontWeight: 800 }}>⚠️ MIXED CONTENT BLOCK</span>: 
+            To show <strong>Local Hardware</strong> instead of Cloud Metrics, allow <strong>"Insecure Content"</strong> in your browser settings for this site.
+          </div>
+        )}
 
         <motion.div
            initial={{ opacity: 0, scale: 0.9 }}
