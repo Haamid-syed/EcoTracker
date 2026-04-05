@@ -18,7 +18,7 @@ export default function Documentation() {
     }
   };
 
-const itemVariants: any = {
+  const itemVariants: any = {
     hidden: { opacity: 0, y: 30 },
     show: { opacity: 1, y: 0, transition: { duration: 0.6, type: 'spring' } }
   };
@@ -33,19 +33,6 @@ const itemVariants: any = {
       >
         {/* Header */}
         <motion.div variants={itemVariants} style={{ marginBottom: '5rem', textAlign: 'center' }}>
-          <div style={{
-            display: 'inline-flex',
-            alignItems: 'center',
-            gap: '12px',
-            background: 'rgba(46, 204, 113, 0.1)',
-            padding: '8px 16px',
-            borderRadius: '40px',
-            border: '1px solid rgba(46, 204, 113, 0.2)',
-            marginBottom: '2rem'
-          }}>
-            <BookOpen size={16} color="var(--accent-neon)" />
-            <span style={{ color: 'var(--accent-neon)', fontSize: '0.75rem', fontWeight: 800, letterSpacing: '0.2em', textTransform: 'uppercase' }}>PROTOCOL V1.0</span>
-          </div>
           <h1 style={{ fontSize: '4rem', fontWeight: 900, color: 'white', marginBottom: '1.5rem', letterSpacing: '-0.04em' }}>
             OPERATING <span style={{ color: 'var(--accent-neon)' }}>MANUAL</span>
           </h1>
@@ -61,10 +48,10 @@ const itemVariants: any = {
               <Terminal size={32} color="var(--accent-neon)" />
               <h2 style={{ fontSize: '1.75rem', fontWeight: 800, color: 'white', margin: 0 }}>HOW TO CONNECT</h2>
             </div>
-            
+
             <div style={{ padding: '16px', background: 'rgba(231, 76, 60, 0.1)', borderRadius: '12px', border: '1px solid rgba(231, 76, 60, 0.2)', marginBottom: '32px' }}>
               <p style={{ color: '#e74c3c', fontSize: '0.85rem', margin: 0, fontWeight: 600 }}>
-                ⚠️ DEPLOYMENT RESTRICTION: The version hosted on Vercel serves as a UI demo only. Browser security prevents public websites from accessing your local hardware. For real-time metrics, you must run the stack locally.
+                DEPLOYMENT RESTRICTION: The version hosted on Vercel serves as a UI demo only. Browser security prevents public websites from accessing your local hardware. For real-time metrics, you must run the stack locally.
               </p>
             </div>
 
@@ -85,13 +72,13 @@ const itemVariants: any = {
             <div style={{ marginTop: '32px', display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', gap: '2rem' }}>
               <div>
                 <h4 style={{ color: 'white', fontSize: '0.9rem', marginBottom: '12px', display: 'flex', alignItems: 'center', gap: '8px' }}>
-                   <Link size={14} color="var(--accent-neon)" /> ENDPOINT
+                  <Link size={14} color="var(--accent-neon)" /> ENDPOINT
                 </h4>
                 <p style={{ color: 'var(--text-muted)', fontSize: '0.85rem' }}>The frontend polls <code>localhost:8000/api/metrics</code> every 2 seconds.</p>
               </div>
               <div>
                 <h4 style={{ color: 'white', fontSize: '0.9rem', marginBottom: '12px', display: 'flex', alignItems: 'center', gap: '8px' }}>
-                   <Signal size={14} color="var(--accent-neon)" /> STATUS INDICATOR
+                  <Signal size={14} color="var(--accent-neon)" /> STATUS INDICATOR
                 </h4>
                 <p style={{ color: 'var(--text-muted)', fontSize: '0.85rem' }}>Check the top-right badge on the Dashboard. <strong>"LIVE"</strong> means success.</p>
               </div>
@@ -101,7 +88,7 @@ const itemVariants: any = {
 
         {/* Section 2: High Level Architecture */}
         <motion.div variants={itemVariants} style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(450px, 1fr))', gap: '1.5rem' }}>
-          
+
           <div style={cardStyle}>
             <div style={{ display: 'flex', gap: '15px', alignItems: 'center', marginBottom: '20px' }}>
               <Cpu size={24} color="var(--accent-neon)" />
@@ -142,24 +129,24 @@ const itemVariants: any = {
               <h3 style={{ fontSize: '1.25rem', fontWeight: 800, color: 'white', margin: 0 }}>CORE LOGIC</h3>
             </div>
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '2.5rem' }}>
-               <div style={{ opacity: 0.8 }}>
-                 <h4 style={{ color: 'var(--accent-neon)', fontSize: '0.8rem', letterSpacing: '0.15em', marginBottom: '12px' }}>CONSERVATIVE IDLE</h4>
-                 <p style={{ fontSize: '0.85rem', color: 'var(--text-muted)', lineHeight: 1.6 }}>
-                   We use CPU Time Delta tracking. A process isn't "idle" just because CPU usage is low; it's idle only if its execution time remains static for 300 seconds.
-                 </p>
-               </div>
-               <div style={{ opacity: 0.8 }}>
-                 <h4 style={{ color: 'var(--accent-neon)', fontSize: '0.8rem', letterSpacing: '0.15em', marginBottom: '12px' }}>INTELLIGENT FILTERS</h4>
-                 <p style={{ fontSize: '0.85rem', color: 'var(--text-muted)', lineHeight: 1.6 }}>
-                   Browsers, IDEs, and Communication apps are automatically exempted from idle-flagging to prevent user disruption while actively working.
-                 </p>
-               </div>
-               <div style={{ opacity: 0.8 }}>
-                 <h4 style={{ color: 'var(--accent-neon)', fontSize: '0.8rem', letterSpacing: '0.15em', marginBottom: '12px' }}>METRIC RANKING</h4>
-                 <p style={{ fontSize: '0.85rem', color: 'var(--text-muted)', lineHeight: 1.6 }}>
-                   Top Processes are ranked by <code>Resource Pressure</code> = (CPU% + Memory%) to identify the true hogs of your system energy.
-                 </p>
-               </div>
+              <div style={{ opacity: 0.8 }}>
+                <h4 style={{ color: 'var(--accent-neon)', fontSize: '0.8rem', letterSpacing: '0.15em', marginBottom: '12px' }}>CONSERVATIVE IDLE</h4>
+                <p style={{ fontSize: '0.85rem', color: 'var(--text-muted)', lineHeight: 1.6 }}>
+                  We use CPU Time Delta tracking. A process isn't "idle" just because CPU usage is low; it's idle only if its execution time remains static for 300 seconds.
+                </p>
+              </div>
+              <div style={{ opacity: 0.8 }}>
+                <h4 style={{ color: 'var(--accent-neon)', fontSize: '0.8rem', letterSpacing: '0.15em', marginBottom: '12px' }}>INTELLIGENT FILTERS</h4>
+                <p style={{ fontSize: '0.85rem', color: 'var(--text-muted)', lineHeight: 1.6 }}>
+                  Browsers, IDEs, and Communication apps are automatically exempted from idle-flagging to prevent user disruption while actively working.
+                </p>
+              </div>
+              <div style={{ opacity: 0.8 }}>
+                <h4 style={{ color: 'var(--accent-neon)', fontSize: '0.8rem', letterSpacing: '0.15em', marginBottom: '12px' }}>METRIC RANKING</h4>
+                <p style={{ fontSize: '0.85rem', color: 'var(--text-muted)', lineHeight: 1.6 }}>
+                  Top Processes are ranked by <code>Resource Pressure</code> = (CPU% + Memory%) to identify the true hogs of your system energy.
+                </p>
+              </div>
             </div>
           </div>
         </motion.div>

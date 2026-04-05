@@ -9,35 +9,11 @@ import numpy as np
 
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from starlette.middleware.base import BaseHTTPMiddleware
-from fastapi.responses import Response
 import uvicorn
 import asyncio
 
-class PrivateNetworkAccessMiddleware(BaseHTTPMiddleware):
-    async def dispatch(self, request, call_next):
-        origin = request.headers.get("origin", "*")
-        
-        if request.method == "OPTIONS" and "access-control-request-private-network" in request.headers:
-            response = Response()
-            response.headers["Access-Control-Allow-Origin"] = origin
-            response.headers["Access-Control-Allow-Methods"] = "*"
-            response.headers["Access-Control-Allow-Headers"] = "*"
-            response.headers["Access-Control-Allow-Private-Network"] = "true"
-            response.headers["Vary"] = "Origin"
-            return response
-            
-        response = await call_next(request)
-        response.headers["Access-Control-Allow-Private-Network"] = "true"
-        # Force strict exact origin for PNA compliance
-        if origin != "*":
-            response.headers["Access-Control-Allow-Origin"] = origin
-            response.headers["Vary"] = "Origin"
-        return response
-
 app = FastAPI(title="Eco-Dashboard API")
 
-app.add_middleware(PrivateNetworkAccessMiddleware)
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
