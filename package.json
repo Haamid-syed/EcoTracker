@@ -1,4 +1,14 @@
 {
+  "name": "eco-tracker-monorepo",
+  "version": "1.0.0",
+  "description": "Cyber-Organic Intelligence telemetry for hardware efficiency.",
+  "scripts": {
+    "dev:backend": "cd backend && python3 app.py",
+    "dev:frontend": "cd frontend && npm run dev",
+    "dev": "npm run dev:backend & npm run dev:frontend",
+    "build": "cd frontend && npm run build",
+    "install:all": "npm install && cd frontend && npm install && pip install -r backend/requirements.txt"
+  },
   "dependencies": {
     "clsx": "^2.1.1",
     "framer-motion": "^12.38.0",
