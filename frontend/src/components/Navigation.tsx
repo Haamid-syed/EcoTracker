@@ -100,12 +100,7 @@ export const Footer = () => {
       </div>
 
       <div className="footer-bottom-flex" style={{ maxWidth: '1400px', margin: '4rem auto 0', paddingTop: '2rem', borderTop: '1px solid rgba(255,255,255,0.03)', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-        <p style={{ color: '#4b5563', fontSize: '0.75rem', fontFamily: 'var(--font-mono)' }}>© 2026 CARBONLY OS</p>
-        <div style={{ display: 'flex', gap: '1.5rem', fontSize: '0.75rem', color: '#4b5563', fontFamily: 'var(--font-mono)' }}>
-          <span>LATENCY: 12ms</span>
-          <span>REGION: GLOBAL-1</span>
-          <span>STATUS: OPERATIONAL</span>
-        </div>
+        <p style={{ color: '#4b5563', fontSize: '0.75rem', fontFamily: 'var(--font-mono)' }}>© 2026 Haamid Syed. All rights reserved.</p>
       </div>
     </footer>
   );
